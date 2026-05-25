@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { existsSync } from 'fs';
+import { mkdir, copyFile, readdir } from 'fs/promises';
 import teamRoutes from './routes/teamRoutes.js';
 import leagueRoutes from './routes/leagueRoutes.js';
 import draftRoutes from './routes/draftRoutes.js';
@@ -16,6 +18,31 @@ import { readFile } from './services/storageService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+/**
+ * Ensures the persistent data directory exists and is seeded with default data files.
+ * On Azure, DATA_DIR should point to /home/data so league data survives redeployments.
+ * Locally, it defaults to server/data/ and this function is a no-op.
+ */
+async function ensureDataDirectory() {
+  const dataDir = process.env.DATA_DIR;
+  if (!dataDir) return; // Local dev — data is in server/data/, no migration needed
+
+  const sourceDir = path.join(__dirname, 'data');
+
+  // Create the persistent data directory and leagues subdirectory
+  await mkdir(path.join(dataDir, 'leagues'), { recursive: true });
+
+  // Seed default data files (fixtures, teams, groups, etc.) if they don't exist yet
+  const seedFiles = ['teams.json', 'groups.json', 'fixtures.json', 'results.json', 'odds.json', 'tournament.json', 'sync-status.json', 'bracket-template.json'];
+  for (const file of seedFiles) {
+    const destPath = path.join(dataDir, file);
+    const srcPath = path.join(sourceDir, file);
+    if (!existsSync(destPath) && existsSync(srcPath)) {
+      await copyFile(srcPath, destPath);
+    }
+  }
+}
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -125,6 +152,7 @@ async function initializeSync() {
 
 // Only start listening when not in test mode
 if (process.env.NODE_ENV !== 'test') {
+  await ensureDataDirectory();
   const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     initializeSync();

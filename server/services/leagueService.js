@@ -1,12 +1,13 @@
 import crypto from 'crypto';
-import { readFile, writeFile, updateFile } from './storageService.js';
+import { readFile, atomicWriteFile, updateFile } from './storageService.js';
 import { readdir } from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const LEAGUES_DIR = path.join(__dirname, '..', 'data', 'leagues');
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
+const LEAGUES_DIR = path.join(DATA_DIR, 'leagues');
 
 /**
  * Validate a name (league or participant).
@@ -141,7 +142,7 @@ export async function createLeague(name) {
     }
   };
 
-  await writeFile(`leagues/${slug}.json`, league);
+  await atomicWriteFile(`leagues/${slug}.json`, league);
   return league;
 }
 

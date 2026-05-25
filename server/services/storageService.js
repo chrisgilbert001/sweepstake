@@ -6,7 +6,7 @@ import lockfile from 'proper-lockfile';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const DATA_DIR = path.join(__dirname, '..', 'data');
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
 
 const RETRY_DELAYS = [100, 200, 400];
 
@@ -65,6 +65,7 @@ export async function writeFile(filename, data) {
  */
 export async function updateFile(filename, fn) {
   const filePath = resolveFilePath(filename);
+  const tmpPath = filePath + '.tmp';
 
   await ensureDirectoryExists(filePath);
 
@@ -87,8 +88,19 @@ export async function updateFile(filename, fn) {
     }
 
     const updatedData = fn(currentData);
-    await fsWriteFile(filePath, JSON.stringify(updatedData, null, 2), 'utf-8');
+    // Write to temp file then rename for atomic update
+    await fsWriteFile(tmpPath, JSON.stringify(updatedData, null, 2), 'utf-8');
+    await rename(tmpPath, filePath);
     return updatedData;
+  } catch (err) {
+    // Clean up tmp file if it exists after a failure
+    try {
+      if (existsSync(tmpPath)) {
+        const { rm } = await import('fs/promises');
+        await rm(tmpPath);
+      }
+    } catch { /* ignore cleanup errors */ }
+    throw err;
   } finally {
     if (release) {
       await release();
