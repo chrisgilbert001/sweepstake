@@ -68,6 +68,7 @@
   font-size: var(--font-size-base);
   transition: border-color var(--transition-fast);
   background: var(--color-bg);
+  color: var(--color-text);
 }
 
 .form-input:focus {

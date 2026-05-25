@@ -27,6 +27,14 @@ body {
               color var(--duration-slow) var(--ease-default);
 }
 
+/* Ensure form elements inherit theme colors */
+input,
+textarea,
+select {
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
 /* Responsive typography */
 h1 {
   font-size: var(--font-size-3xl);
