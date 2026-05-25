@@ -55,7 +55,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff;
+  background-color: var(--color-bg-card);
   color: var(--color-primary);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
@@ -119,13 +119,13 @@
 }
 
 .event-type-badge.badge-match-result {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: var(--color-bg-muted);
+  color: var(--color-success);
 }
 
 .event-type-badge.badge-team-eliminated {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: var(--color-bg-muted);
+  color: var(--color-error);
 }
 
 .event-stage {

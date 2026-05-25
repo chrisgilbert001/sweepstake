@@ -3,7 +3,7 @@ import { adminAuth } from '../middleware/adminAuth.js';
 import { addResult, updateResult } from '../services/matchService.js';
 import { setTournamentOdds, setMatchOdds } from '../services/oddsService.js';
 import { addFixture, updateFixture } from '../services/fixtureService.js';
-import { readFile } from '../services/storageService.js';
+import { readFile, writeFile } from '../services/storageService.js';
 import { triggerManualSync, isSyncInProgress } from '../services/sync/syncScheduler.js';
 
 const router = Router();
@@ -171,6 +171,46 @@ router.post('/sync/trigger', async (req, res, next) => {
     if (err.message === 'Sync already in progress') {
       return res.status(409).json({ error: 'A sync is already in progress' });
     }
+    next(err);
+  }
+});
+
+/**
+ * POST /api/admin/reset/fixtures
+ * Clear all fixtures. Requires admin token.
+ */
+router.post('/reset/fixtures', async (req, res, next) => {
+  try {
+    await writeFile('fixtures.json', { fixtures: [] });
+    res.json({ message: 'Fixtures cleared' });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /api/admin/reset/results
+ * Clear all results. Requires admin token.
+ */
+router.post('/reset/results', async (req, res, next) => {
+  try {
+    await writeFile('results.json', { results: [] });
+    res.json({ message: 'Results cleared' });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /api/admin/reset/all
+ * Clear fixtures and results (but NEVER leagues). Requires admin token.
+ */
+router.post('/reset/all', async (req, res, next) => {
+  try {
+    await writeFile('fixtures.json', { fixtures: [] });
+    await writeFile('results.json', { results: [] });
+    res.json({ message: 'Fixtures and results cleared. Leagues are untouched.' });
+  } catch (err) {
     next(err);
   }
 });

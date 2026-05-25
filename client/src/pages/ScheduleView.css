@@ -34,12 +34,12 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-md) var(--space-lg);
-  background-color: #d4edda;
-  border: 1px solid #c3e6cb;
+  background-color: var(--color-bg-muted);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   margin-bottom: var(--space-xl);
   font-weight: var(--font-weight-semibold);
-  color: #155724;
+  color: var(--color-success);
 }
 
 .completed-icon {
@@ -75,7 +75,7 @@
 
 .fixture-highlighted {
   border-left: 4px solid var(--color-primary);
-  background-color: #f0f9f2;
+  background-color: var(--color-bg-card);
 }
 
 .fixture-completed {
@@ -101,13 +101,13 @@
 }
 
 .fixture-status-badge.status-completed {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: var(--color-bg-muted);
+  color: var(--color-success);
 }
 
 .fixture-status-badge.status-scheduled {
-  background-color: #e2e8f0;
-  color: #475569;
+  background-color: var(--color-bg-muted);
+  color: var(--color-text-light);
 }
 
 /* Fixture meta */

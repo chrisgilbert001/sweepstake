@@ -186,18 +186,18 @@
 }
 
 .match-outcome.win {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: var(--color-bg-muted);
+  color: var(--color-success);
 }
 
 .match-outcome.draw {
-  background-color: #fff3cd;
-  color: #856404;
+  background-color: var(--color-bg-muted);
+  color: var(--color-warning);
 }
 
 .match-outcome.loss {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: var(--color-bg-muted);
+  color: var(--color-error);
 }
 
 .match-points {

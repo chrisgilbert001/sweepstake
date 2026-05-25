@@ -4,7 +4,7 @@
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
   background-color: var(--color-warning);
-  color: #212529;
+  color: var(--color-text);
   border-radius: var(--radius-sm);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);

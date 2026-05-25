@@ -82,8 +82,8 @@
 }
 
 .countdown-timer {
-  background-color: #e2e8f0;
-  color: #475569;
+  background-color: var(--color-bg-muted);
+  color: var(--color-text-light);
   font-family: monospace;
 }
 
@@ -94,8 +94,8 @@
 }
 
 .countdown-completed {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: var(--color-success);
+  color: var(--color-text-inverse);
 }
 
 @keyframes pulse {
