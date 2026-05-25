@@ -1,0 +1,259 @@
+.schedule-view {
+  padding: var(--space-xl) 0;
+}
+
+.schedule-header {
+  margin-bottom: var(--space-xl);
+}
+
+.schedule-header .back-link {
+  display: inline-block;
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-sm);
+  text-decoration: none;
+}
+
+.schedule-header .back-link:hover {
+  text-decoration: underline;
+}
+
+.schedule-header h1 {
+  margin-bottom: var(--space-xs);
+}
+
+.schedule-league-name {
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+}
+
+/* All completed banner */
+.all-completed-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-xl);
+  font-weight: var(--font-weight-semibold);
+  color: #155724;
+}
+
+.completed-icon {
+  font-size: var(--font-size-xl);
+}
+
+/* No fixtures */
+.no-fixtures {
+  text-align: center;
+  padding: var(--space-3xl);
+  color: var(--color-text-light);
+}
+
+/* Fixtures list */
+.fixtures-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* Fixture card */
+.fixture-card {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  transition: box-shadow var(--transition-fast);
+}
+
+.fixture-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.fixture-highlighted {
+  border-left: 4px solid var(--color-primary);
+  background-color: #f0f9f2;
+}
+
+.fixture-completed {
+  background-color: var(--color-bg-muted);
+  border-color: var(--color-border);
+}
+
+.fixture-completed .fixture-stage {
+  color: var(--color-success);
+}
+
+.fixture-scheduled .fixture-stage {
+  color: var(--color-primary);
+}
+
+.fixture-status-badge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.fixture-status-badge.status-completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.fixture-status-badge.status-scheduled {
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+/* Fixture meta */
+.fixture-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-sm);
+}
+
+.fixture-stage {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+}
+
+.fixture-datetime {
+  color: var(--color-text-light);
+}
+
+/* Fixture teams layout */
+.fixture-teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.fixture-team {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.fixture-team-home {
+  text-align: right;
+}
+
+.fixture-team-away {
+  text-align: left;
+}
+
+.team-name {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+}
+
+.team-owner {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+/* Score / VS */
+.fixture-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+}
+
+.score-display {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.penalty-indicator {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  font-weight: var(--font-weight-normal);
+}
+
+.vs-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+}
+
+/* Loading and error states */
+.schedule-loading,
+.schedule-error {
+  text-align: center;
+  padding: var(--space-3xl);
+}
+
+.schedule-error {
+  color: var(--color-error);
+}
+
+.schedule-error h2 {
+  margin-bottom: var(--space-md);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .schedule-view {
+    padding: var(--space-md) 0;
+  }
+
+  .fixture-card {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .fixture-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+
+  .fixture-teams {
+    grid-template-columns: 1fr auto 1fr;
+    gap: var(--space-sm);
+  }
+
+  .fixture-score {
+    min-width: 60px;
+  }
+
+  .score-display {
+    font-size: var(--font-size-lg);
+  }
+
+  .team-name {
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .fixture-teams {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
+    text-align: center;
+  }
+
+  .fixture-team-home,
+  .fixture-team-away {
+    text-align: center;
+  }
+
+  .fixture-score {
+    min-width: unset;
+    padding: var(--space-xs) 0;
+  }
+}

@@ -1,0 +1,100 @@
+.join-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-xl) var(--space-md);
+}
+
+.join-card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-md);
+}
+
+.join-card h1 {
+  margin-bottom: var(--space-sm);
+  color: var(--color-primary-dark);
+}
+
+.join-league-info {
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.join-league-info p {
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-xs);
+}
+
+.join-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.join-full-notice {
+  background: var(--color-bg-muted);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  text-align: center;
+}
+
+.join-full-notice p {
+  color: var(--color-text-light);
+  margin-bottom: var(--space-md);
+}
+
+.join-full-notice .notice-title {
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-sm);
+}
+
+.join-full-notice a {
+  display: inline-block;
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.join-loading,
+.join-error-page {
+  text-align: center;
+  padding: var(--space-3xl) var(--space-md);
+}
+
+.join-loading p {
+  color: var(--color-text-light);
+  font-size: var(--font-size-lg);
+}
+
+.join-error-page h1 {
+  color: var(--color-error);
+  margin-bottom: var(--space-md);
+}
+
+.join-error-page p {
+  color: var(--color-text-light);
+  margin-bottom: var(--space-lg);
+}
+
+.join-error-page a {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+@media (max-width: 480px) {
+  .join-page {
+    padding: var(--space-lg) var(--space-sm);
+  }
+
+  .join-card {
+    padding: var(--space-lg);
+  }
+}

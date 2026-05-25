@@ -1,0 +1,93 @@
+.bracket-view {
+  padding: var(--space-xl) 0;
+}
+
+.bracket-header {
+  margin-bottom: var(--space-xl);
+}
+
+.bracket-header .back-link {
+  display: inline-block;
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-sm);
+  text-decoration: none;
+}
+
+.bracket-header .back-link:hover {
+  text-decoration: underline;
+}
+
+.bracket-header h1 {
+  margin-bottom: var(--space-xs);
+}
+
+.bracket-league-name {
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+}
+
+/* Empty state */
+.bracket-empty {
+  text-align: center;
+  padding: var(--space-3xl);
+  color: var(--color-text-light);
+}
+
+/* Scrollable bracket container */
+.bracket-scroll-container {
+  overflow-x: auto;
+  padding: var(--space-md) 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* SVG bracket styling */
+.knockout-bracket-svg {
+  display: block;
+  min-width: max-content;
+}
+
+.bracket-round-title {
+  font-family: var(--font-family);
+}
+
+.bracket-team-name {
+  font-family: var(--font-family);
+}
+
+/* Owner highlight background for dark mode */
+:root {
+  --bracket-owner-bg: #e8f5e9;
+}
+
+[data-theme='dark'] {
+  --bracket-owner-bg: #1b3a1f;
+}
+
+/* Loading and error states */
+.bracket-loading,
+.bracket-error {
+  text-align: center;
+  padding: var(--space-3xl);
+}
+
+.bracket-error {
+  color: var(--color-error);
+}
+
+.bracket-error h2 {
+  margin-bottom: var(--space-md);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bracket-view {
+    padding: var(--space-md) 0;
+  }
+
+  .bracket-scroll-container {
+    margin: 0 calc(-1 * var(--space-md));
+    padding: var(--space-md);
+  }
+}

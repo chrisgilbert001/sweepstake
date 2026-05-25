@@ -1,0 +1,238 @@
+{
+  "roundOf32": [
+    { "matchNumber": 1, "home": "1A", "away": "3rd C/D/E/F" },
+    { "matchNumber": 2, "home": "2A", "away": "2B" },
+    { "matchNumber": 3, "home": "1C", "away": "3rd A/B/E/F" },
+    { "matchNumber": 4, "home": "2C", "away": "2D" },
+    { "matchNumber": 5, "home": "1E", "away": "3rd A/B/C/D" },
+    { "matchNumber": 6, "home": "2E", "away": "2F" },
+    { "matchNumber": 7, "home": "1G", "away": "3rd I/J/K/L" },
+    { "matchNumber": 8, "home": "2G", "away": "2H" },
+    { "matchNumber": 9, "home": "1B", "away": "3rd C/D/E/F" },
+    { "matchNumber": 10, "home": "1D", "away": "3rd A/B/E/F" },
+    { "matchNumber": 11, "home": "1F", "away": "3rd A/B/C/D" },
+    { "matchNumber": 12, "home": "1H", "away": "3rd I/J/K/L" },
+    { "matchNumber": 13, "home": "1I", "away": "2L" },
+    { "matchNumber": 14, "home": "1J", "away": "2K" },
+    { "matchNumber": 15, "home": "1K", "away": "2J" },
+    { "matchNumber": 16, "home": "1L", "away": "2I" }
+  ],
+  "thirdPlaceAllocations": {
+    "A/B/C/D/E/F/I/J": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd A",
+      "3rd A/B/C/D": "3rd B",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/C/D/E/F/I/K": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd A",
+      "3rd A/B/C/D": "3rd B",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/C/D/E/F/I/L": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd A",
+      "3rd A/B/C/D": "3rd B",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/C/D/E/F/J/K": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd A",
+      "3rd A/B/C/D": "3rd B",
+      "3rd I/J/K/L": "3rd J"
+    },
+    "A/B/C/D/E/F/J/L": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd A",
+      "3rd A/B/C/D": "3rd B",
+      "3rd I/J/K/L": "3rd J"
+    },
+    "A/B/C/D/E/F/K/L": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd A",
+      "3rd A/B/C/D": "3rd B",
+      "3rd I/J/K/L": "3rd K"
+    },
+    "A/B/C/D/E/G/I/J": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd A",
+      "3rd A/B/C/D": "3rd B",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/C/D/E/G/I/K": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd A",
+      "3rd A/B/C/D": "3rd B",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/C/D/E/G/I/L": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd A",
+      "3rd A/B/C/D": "3rd B",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/C/D/E/G/J/K": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd A",
+      "3rd A/B/C/D": "3rd B",
+      "3rd I/J/K/L": "3rd J"
+    },
+    "A/B/C/D/E/G/J/L": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd A",
+      "3rd A/B/C/D": "3rd B",
+      "3rd I/J/K/L": "3rd J"
+    },
+    "A/B/C/D/E/G/K/L": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd A",
+      "3rd A/B/C/D": "3rd B",
+      "3rd I/J/K/L": "3rd K"
+    },
+    "A/B/C/D/F/G/I/J": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/C/D/F/G/I/K": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/C/D/F/G/I/L": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/C/D/F/G/J/K": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd J"
+    },
+    "A/B/C/D/F/G/J/L": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd J"
+    },
+    "A/B/C/D/F/G/K/L": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd K"
+    },
+    "A/B/C/E/F/G/I/J": {
+      "3rd C/D/E/F": "3rd E",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/C/E/F/G/I/K": {
+      "3rd C/D/E/F": "3rd E",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/C/E/F/G/I/L": {
+      "3rd C/D/E/F": "3rd E",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/C/E/F/G/J/K": {
+      "3rd C/D/E/F": "3rd E",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd J"
+    },
+    "A/B/C/E/F/G/J/L": {
+      "3rd C/D/E/F": "3rd E",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd J"
+    },
+    "A/B/C/E/F/G/K/L": {
+      "3rd C/D/E/F": "3rd E",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd K"
+    },
+    "A/B/D/E/F/G/I/J": {
+      "3rd C/D/E/F": "3rd D",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/D/E/F/G/I/K": {
+      "3rd C/D/E/F": "3rd D",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/D/E/F/G/I/L": {
+      "3rd C/D/E/F": "3rd D",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "A/B/D/E/F/G/J/K": {
+      "3rd C/D/E/F": "3rd D",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd J"
+    },
+    "A/B/D/E/F/G/J/L": {
+      "3rd C/D/E/F": "3rd D",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd J"
+    },
+    "A/B/D/E/F/G/K/L": {
+      "3rd C/D/E/F": "3rd D",
+      "3rd A/B/E/F": "3rd F",
+      "3rd A/B/C/D": "3rd A",
+      "3rd I/J/K/L": "3rd K"
+    },
+    "C/D/E/F/G/H/I/J": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd E",
+      "3rd A/B/C/D": "3rd D",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "C/D/E/F/G/H/I/K": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd E",
+      "3rd A/B/C/D": "3rd D",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "C/D/E/F/G/H/I/L": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd E",
+      "3rd A/B/C/D": "3rd D",
+      "3rd I/J/K/L": "3rd I"
+    },
+    "C/D/E/F/G/H/J/K": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd E",
+      "3rd A/B/C/D": "3rd D",
+      "3rd I/J/K/L": "3rd J"
+    },
+    "C/D/E/F/G/H/J/L": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd E",
+      "3rd A/B/C/D": "3rd D",
+      "3rd I/J/K/L": "3rd J"
+    },
+    "C/D/E/F/G/H/K/L": {
+      "3rd C/D/E/F": "3rd C",
+      "3rd A/B/E/F": "3rd E",
+      "3rd A/B/C/D": "3rd D",
+      "3rd I/J/K/L": "3rd K"
+    }
+  }
+}

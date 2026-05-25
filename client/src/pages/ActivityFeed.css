@@ -1,0 +1,328 @@
+.activity-feed {
+  padding: var(--space-xl) 0;
+}
+
+.activity-header {
+  margin-bottom: var(--space-xl);
+}
+
+.activity-header .back-link {
+  display: inline-block;
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-sm);
+  text-decoration: none;
+}
+
+.activity-header .back-link:hover {
+  text-decoration: underline;
+}
+
+.activity-header h1 {
+  margin-bottom: var(--space-xs);
+}
+
+.activity-league-name {
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+}
+
+/* New events notification */
+.new-events-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-lg);
+  cursor: pointer;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  transition: background-color var(--transition-fast);
+  border: none;
+  width: 100%;
+}
+
+.new-events-banner:hover {
+  opacity: 0.9;
+}
+
+.new-events-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  min-width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  padding: 0 var(--space-xs);
+}
+
+/* Empty state */
+.activity-empty {
+  text-align: center;
+  padding: var(--space-3xl);
+  color: var(--color-text-light);
+}
+
+/* Events list */
+.activity-events {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* Event card */
+.activity-event-card {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  transition: box-shadow var(--transition-fast);
+}
+
+.activity-event-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.activity-event-card.event-match-result {
+  border-left: 4px solid var(--color-primary);
+}
+
+.activity-event-card.event-team-eliminated {
+  border-left: 4px solid var(--color-error, #dc3545);
+}
+
+/* Event meta */
+.event-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-sm);
+}
+
+.event-type-badge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.event-type-badge.badge-match-result {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.event-type-badge.badge-team-eliminated {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.event-stage {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+}
+
+.event-timestamp {
+  color: var(--color-text-light);
+}
+
+/* Match result event */
+.event-match-teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.event-team {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.event-team-home {
+  text-align: right;
+}
+
+.event-team-away {
+  text-align: left;
+}
+
+.event-team-name {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+}
+
+.event-team-owner {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+.event-team-points {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+}
+
+.event-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+}
+
+.event-score-display {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+}
+
+/* Elimination event */
+.event-elimination {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.elimination-icon {
+  font-size: var(--font-size-xl);
+}
+
+.elimination-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.elimination-team-name {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+}
+
+.elimination-owner {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+.elimination-stage {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* Pagination */
+.activity-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.pagination-btn {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-card);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+/* Loading and error states */
+.activity-loading,
+.activity-error {
+  text-align: center;
+  padding: var(--space-3xl);
+}
+
+.activity-error {
+  color: var(--color-error);
+}
+
+.activity-error h2 {
+  margin-bottom: var(--space-md);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .activity-feed {
+    padding: var(--space-md) 0;
+  }
+
+  .activity-event-card {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .event-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+
+  .event-match-teams {
+    grid-template-columns: 1fr auto 1fr;
+    gap: var(--space-sm);
+  }
+
+  .event-score {
+    min-width: 60px;
+  }
+
+  .event-score-display {
+    font-size: var(--font-size-lg);
+  }
+
+  .event-team-name {
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .event-match-teams {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
+    text-align: center;
+  }
+
+  .event-team-home,
+  .event-team-away {
+    text-align: center;
+  }
+
+  .event-score {
+    min-width: unset;
+    padding: var(--space-xs) 0;
+  }
+}

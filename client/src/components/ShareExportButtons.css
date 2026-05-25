@@ -1,0 +1,107 @@
+.share-export-buttons {
+  margin-bottom: var(--space-md);
+}
+
+.share-export-buttons__actions {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.share-btn,
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-card);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  min-height: 44px;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.share-btn:hover,
+.export-btn:hover {
+  background-color: var(--color-bg-muted);
+  border-color: var(--color-primary);
+}
+
+.export-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.share-export-buttons__confirmation {
+  margin-top: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  color: var(--color-success, #28a745);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  animation: fadeIn 0.2s ease;
+}
+
+.share-export-buttons__fallback {
+  margin-top: var(--space-sm);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  background-color: var(--color-bg-card);
+}
+
+.fallback-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+.fallback-close {
+  background: none;
+  border: none;
+  font-size: var(--font-size-base);
+  color: var(--color-text-light);
+  cursor: pointer;
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+}
+
+.fallback-close:hover {
+  background-color: var(--color-bg-muted);
+  color: var(--color-text);
+}
+
+.fallback-textarea {
+  width: 100%;
+  resize: vertical;
+  padding: var(--space-sm);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg-muted);
+  color: var(--color-text);
+  font-family: monospace;
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .share-export-buttons__actions {
+    flex-direction: column;
+  }
+
+  .share-btn,
+  .export-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

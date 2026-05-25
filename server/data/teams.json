@@ -1,0 +1,72 @@
+{
+  "pots": [
+    {
+      "potNumber": 1,
+      "teams": [
+        { "id": "esp", "name": "Spain", "seedRank": 1 },
+        { "id": "fra", "name": "France", "seedRank": 2 },
+        { "id": "arg", "name": "Argentina", "seedRank": 3 },
+        { "id": "eng", "name": "England", "seedRank": 4 },
+        { "id": "por", "name": "Portugal", "seedRank": 5 },
+        { "id": "ned", "name": "Netherlands", "seedRank": 6 },
+        { "id": "bra", "name": "Brazil", "seedRank": 7 },
+        { "id": "ger", "name": "Germany", "seedRank": 8 },
+        { "id": "bel", "name": "Belgium", "seedRank": 9 },
+        { "id": "usa", "name": "United States", "seedRank": 16 },
+        { "id": "mex", "name": "Mexico", "seedRank": 22 },
+        { "id": "can", "name": "Canada", "seedRank": 30 }
+      ]
+    },
+    {
+      "potNumber": 2,
+      "teams": [
+        { "id": "cro", "name": "Croatia", "seedRank": 12 },
+        { "id": "mar", "name": "Morocco", "seedRank": 10 },
+        { "id": "col", "name": "Colombia", "seedRank": 13 },
+        { "id": "uru", "name": "Uruguay", "seedRank": 18 },
+        { "id": "sui", "name": "Switzerland", "seedRank": 20 },
+        { "id": "jpn", "name": "Japan", "seedRank": 14 },
+        { "id": "sen", "name": "Senegal", "seedRank": 11 },
+        { "id": "irn", "name": "Iran", "seedRank": 32 },
+        { "id": "kor", "name": "South Korea", "seedRank": 23 },
+        { "id": "ecu", "name": "Ecuador", "seedRank": 15 },
+        { "id": "aut", "name": "Austria", "seedRank": 24 },
+        { "id": "aus", "name": "Australia", "seedRank": 28 }
+      ]
+    },
+    {
+      "potNumber": 3,
+      "teams": [
+        { "id": "nor", "name": "Norway", "seedRank": 17 },
+        { "id": "pan", "name": "Panama", "seedRank": 38 },
+        { "id": "egy", "name": "Egypt", "seedRank": 29 },
+        { "id": "alg", "name": "Algeria", "seedRank": 33 },
+        { "id": "sco", "name": "Scotland", "seedRank": 31 },
+        { "id": "par", "name": "Paraguay", "seedRank": 34 },
+        { "id": "tun", "name": "Tunisia", "seedRank": 36 },
+        { "id": "civ", "name": "Ivory Coast", "seedRank": 19 },
+        { "id": "uzb", "name": "Uzbekistan", "seedRank": 42 },
+        { "id": "qat", "name": "Qatar", "seedRank": 41 },
+        { "id": "sau", "name": "Saudi Arabia", "seedRank": 39 },
+        { "id": "rsa", "name": "South Africa", "seedRank": 37 }
+      ]
+    },
+    {
+      "potNumber": 4,
+      "teams": [
+        { "id": "jor", "name": "Jordan", "seedRank": 43 },
+        { "id": "cpv", "name": "Cape Verde", "seedRank": 44 },
+        { "id": "gha", "name": "Ghana", "seedRank": 35 },
+        { "id": "cur", "name": "Curacao", "seedRank": 46 },
+        { "id": "hai", "name": "Haiti", "seedRank": 45 },
+        { "id": "nzl", "name": "New Zealand", "seedRank": 47 },
+        { "id": "tur", "name": "Turkey", "seedRank": 21 },
+        { "id": "bih", "name": "Bosnia and Herzegovina", "seedRank": 26 },
+        { "id": "swe", "name": "Sweden", "seedRank": 25 },
+        { "id": "cze", "name": "Czechia", "seedRank": 27 },
+        { "id": "irq", "name": "Iraq", "seedRank": 48 },
+        { "id": "cod", "name": "DR Congo", "seedRank": 40 }
+      ]
+    }
+  ]
+}

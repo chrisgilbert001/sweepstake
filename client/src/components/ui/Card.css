@@ -1,0 +1,62 @@
+/* Card base styles */
+.card {
+  background: var(--color-bg-card);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--color-border-light);
+  padding: var(--card-padding);
+}
+
+/* Elevation variants */
+.card--flat {
+  box-shadow: var(--elevation-flat);
+}
+
+.card--raised {
+  box-shadow: var(--elevation-raised);
+}
+
+.card--prominent {
+  box-shadow: var(--elevation-prominent);
+}
+
+/* Hover effect */
+.card--hoverable {
+  transition: transform var(--duration-normal) var(--ease-default),
+              box-shadow var(--duration-normal) var(--ease-default);
+  cursor: pointer;
+}
+
+.card--hoverable:hover {
+  transform: translateY(-2px);
+}
+
+.card--hoverable.card--flat:hover {
+  box-shadow: var(--elevation-raised);
+}
+
+.card--hoverable.card--raised:hover {
+  box-shadow: var(--elevation-prominent);
+}
+
+/* Responsive padding */
+@media (max-width: 768px) {
+  .card {
+    padding: var(--card-padding-compact);
+  }
+}
+
+/* Compact padding override */
+.card--compact {
+  padding: var(--card-padding-compact);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .card--hoverable {
+    transition: box-shadow var(--duration-normal) var(--ease-default);
+  }
+
+  .card--hoverable:hover {
+    transform: none;
+  }
+}

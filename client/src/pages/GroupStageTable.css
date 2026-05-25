@@ -1,0 +1,189 @@
+.groups-view {
+  padding: var(--space-xl) 0;
+}
+
+.groups-header {
+  margin-bottom: var(--space-xl);
+}
+
+.groups-header .back-link {
+  display: inline-block;
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-sm);
+  text-decoration: none;
+}
+
+.groups-header .back-link:hover {
+  text-decoration: underline;
+}
+
+.groups-header h1 {
+  margin-bottom: var(--space-xs);
+}
+
+.groups-league-name {
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+}
+
+/* Groups grid layout */
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: var(--space-xl);
+}
+
+/* Individual group card */
+.group-card {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.group-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-md);
+  color: var(--color-primary);
+}
+
+/* Table wrapper for horizontal scroll on small screens */
+.group-table-wrapper {
+  overflow-x: auto;
+}
+
+/* Group table */
+.group-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.group-table thead tr {
+  border-bottom: 2px solid var(--color-border);
+}
+
+.group-table th {
+  padding: var(--space-xs) var(--space-sm);
+  text-align: center;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-light);
+  white-space: nowrap;
+}
+
+.group-table th.col-team {
+  text-align: left;
+}
+
+.group-table th.col-pos {
+  text-align: center;
+  width: 28px;
+}
+
+.group-table td {
+  padding: var(--space-sm);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.group-table td.col-team {
+  text-align: left;
+}
+
+.group-table td.col-pos {
+  text-align: center;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+}
+
+.group-table td.col-pts {
+  font-weight: var(--font-weight-bold);
+}
+
+/* Team cell content */
+.col-team .team-name {
+  font-weight: var(--font-weight-semibold);
+  margin-right: var(--space-xs);
+}
+
+.col-team .team-code {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-family-mono);
+}
+
+.col-team .team-owner {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--color-primary);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* Row styling */
+.group-row {
+  border-bottom: 1px solid var(--color-border-light);
+  transition: background-color var(--transition-fast);
+}
+
+.group-row:last-child {
+  border-bottom: none;
+}
+
+/* Owned team highlight */
+.group-row-owned {
+  background-color: rgba(26, 95, 42, 0.06);
+}
+
+[data-theme='dark'] .group-row-owned {
+  background-color: rgba(76, 175, 96, 0.1);
+}
+
+/* Qualification line - thick border between position 2 and 3 */
+.group-row-qualification-border {
+  border-bottom: 3px solid var(--color-primary);
+}
+
+/* Loading and error states */
+.groups-loading,
+.groups-error {
+  text-align: center;
+  padding: var(--space-3xl);
+}
+
+.groups-error {
+  color: var(--color-error);
+}
+
+.groups-error h2 {
+  margin-bottom: var(--space-md);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .groups-view {
+    padding: var(--space-md) 0;
+  }
+
+  .groups-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .group-card {
+    padding: var(--space-md);
+  }
+
+  .group-table {
+    font-size: var(--font-size-xs);
+  }
+
+  .group-table th,
+  .group-table td {
+    padding: var(--space-xs);
+  }
+}

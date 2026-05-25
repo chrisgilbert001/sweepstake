@@ -1,0 +1,245 @@
+/* NavigationBar Component Styles */
+
+/* ===== Base Layout ===== */
+.navigation-bar {
+  width: 100%;
+  background-color: var(--color-bg-card, #ffffff);
+  border-bottom: 1px solid var(--color-border-light, #e9ecef);
+  z-index: 100;
+}
+
+.navigation-bar__items {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1, 4px);
+  height: var(--nav-height-desktop, 56px);
+  max-width: var(--content-max-width, 1200px);
+  margin: 0 auto;
+  padding: 0 var(--space-3, 16px);
+}
+
+/* ===== Nav Item (shared desktop + mobile) ===== */
+.nav-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2, 8px);
+  padding: var(--space-2, 8px) var(--space-3, 16px);
+  border: none;
+  background: transparent;
+  color: var(--color-text-light, #495057);
+  font-family: var(--font-family, sans-serif);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: var(--radius-md, 8px);
+  transition: background-color var(--duration-fast, 100ms) var(--ease-default, ease),
+    color var(--duration-fast, 100ms) var(--ease-default, ease),
+    transform var(--duration-fast, 100ms) var(--ease-default, ease);
+  white-space: nowrap;
+  min-height: var(--nav-item-min-size, 44px);
+  position: relative;
+}
+
+.nav-item__icon {
+  font-size: var(--font-size-lg, 1.125rem);
+  line-height: 1;
+}
+
+.nav-item__label {
+  line-height: 1;
+}
+
+/* ===== Hover / Focus (Task 4.9) ===== */
+.nav-item:hover,
+.nav-item:focus-visible {
+  background-color: var(--color-bg-muted, #e9ecef);
+  transition: background-color var(--duration-fast, 100ms) var(--ease-default, ease);
+}
+
+.nav-item:focus-visible {
+  outline: 2px solid var(--color-primary, #1a5f2a);
+  outline-offset: -2px;
+}
+
+/* ===== Active Item (Task 4.6) ===== */
+.nav-item--active {
+  color: var(--color-primary, #1a5f2a);
+  font-weight: var(--font-weight-semibold, 600);
+  background-color: color-mix(in srgb, var(--color-primary, #1a5f2a) 8%, transparent);
+}
+
+/* ===== Press Feedback (Task 4.8) ===== */
+.nav-item--pressed {
+  transform: scale(0.96);
+}
+
+/* ===== Overflow Container ===== */
+.nav-overflow-container {
+  position: relative;
+}
+
+/* ===== Overflow Panel - Desktop (Task 4.5) ===== */
+.nav-overflow-panel {
+  position: absolute;
+  top: calc(100% + var(--space-2, 8px));
+  right: 0;
+  min-width: 180px;
+  background-color: var(--color-bg-card, #ffffff);
+  border: 1px solid var(--color-border, #dee2e6);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--elevation-prominent, 0 10px 15px rgba(0, 0, 0, 0.1));
+  padding: var(--space-2, 8px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1, 4px);
+  z-index: 200;
+  animation: overflowFadeIn var(--duration-normal, 200ms) var(--ease-default, ease);
+}
+
+@keyframes overflowFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Overflow Item ===== */
+.nav-overflow-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  padding: var(--space-2, 8px) var(--space-3, 16px);
+  border-radius: var(--radius-md, 8px);
+  color: var(--color-text, #212529);
+  text-decoration: none;
+  font-family: var(--font-family, sans-serif);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: var(--font-weight-medium, 500);
+  cursor: pointer;
+  transition: background-color var(--duration-fast, 100ms) var(--ease-default, ease);
+  min-height: var(--nav-item-min-size, 44px);
+}
+
+.nav-overflow-item:hover,
+.nav-overflow-item:focus-visible {
+  background-color: var(--color-bg-muted, #e9ecef);
+}
+
+.nav-overflow-item:focus-visible {
+  outline: 2px solid var(--color-primary, #1a5f2a);
+  outline-offset: -2px;
+}
+
+.nav-overflow-item--active {
+  color: var(--color-primary, #1a5f2a);
+  font-weight: var(--font-weight-semibold, 600);
+  background-color: color-mix(in srgb, var(--color-primary, #1a5f2a) 8%, transparent);
+}
+
+.nav-overflow-item__icon {
+  font-size: var(--font-size-lg, 1.125rem);
+  line-height: 1;
+}
+
+.nav-overflow-item__label {
+  line-height: 1;
+}
+
+/* ===== Mobile Layout (≤768px) - Tasks 4.3, 4.7 ===== */
+@media (max-width: 768px) {
+  .navigation-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-bottom: none;
+    border-top: 1px solid var(--color-border-light, #e9ecef);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .navigation-bar__items {
+    height: var(--nav-height-mobile, 64px);
+    justify-content: space-around;
+    padding: 0 var(--space-2, 8px);
+    gap: 0;
+  }
+
+  .nav-item {
+    flex-direction: column;
+    gap: var(--space-1, 4px);
+    padding: var(--space-1, 4px) var(--space-2, 8px);
+    font-size: var(--font-size-xs, 0.75rem);
+    border-radius: var(--radius-sm, 4px);
+    flex: 1;
+    /* 44px minimum touch targets (Task 4.7) */
+    min-height: var(--nav-item-min-size, 44px);
+    min-width: var(--nav-item-min-size, 44px);
+  }
+
+  .nav-item__icon {
+    font-size: var(--font-size-xl, 1.25rem);
+  }
+
+  .nav-item__label {
+    font-size: var(--font-size-xs, 0.75rem);
+  }
+
+  /* Overflow Panel - Mobile: slide-up from bottom (Task 4.5) */
+  .nav-overflow-panel {
+    position: fixed;
+    bottom: var(--nav-height-mobile, 64px);
+    left: 0;
+    right: 0;
+    top: auto;
+    min-width: unset;
+    border-radius: var(--radius-lg, 12px) var(--radius-lg, 12px) 0 0;
+    padding: var(--space-3, 16px);
+    animation: overflowSlideUp var(--duration-normal, 200ms) var(--ease-default, ease);
+  }
+
+  @keyframes overflowSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .nav-overflow-item {
+    padding: var(--space-3, 16px);
+    /* 44px minimum touch targets (Task 4.7) */
+    min-height: var(--nav-item-min-size, 44px);
+    min-width: var(--nav-item-min-size, 44px);
+  }
+}
+
+/* ===== Reduced Motion (Task 4.10) ===== */
+@media (prefers-reduced-motion: reduce) {
+  .nav-overflow-panel {
+    animation: none;
+    transition: none;
+  }
+
+  .nav-item--pressed {
+    transform: none;
+  }
+
+  .nav-item {
+    transition: none;
+  }
+
+  .nav-overflow-item {
+    transition: none;
+  }
+}

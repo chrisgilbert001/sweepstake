@@ -1,0 +1,217 @@
+/* LeagueDashboard — task 7.8: 24px spacing between Card sections */
+.league-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.league-dashboard__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.league-dashboard__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.league-dashboard__participant-count {
+  font-size: 0.9rem;
+  color: var(--text-secondary, #666);
+}
+
+.league-dashboard__join-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.league-dashboard__join-url {
+  font-size: 0.8rem;
+  color: var(--text-secondary, #666);
+  word-break: break-all;
+}
+
+.league-dashboard__copy-btn {
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 6px;
+  background: var(--surface-color, #fff);
+  cursor: pointer;
+  transition: background-color var(--duration-fast, 100ms) ease;
+  min-height: 32px;
+}
+
+.league-dashboard__copy-btn:hover {
+  background: var(--surface-hover, #f0f0f0);
+}
+
+.league-dashboard__copy-btn.copied {
+  background: var(--success-bg, #d4edda);
+  border-color: var(--success-border, #c3e6cb);
+  color: var(--success-text, #155724);
+}
+
+/* Points Summary Widget (task 7.5, 7.6, 7.7) */
+.points-summary-widget {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-color, #f8f9fa);
+  border: 1px solid var(--border-color, #e9ecef);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.points-summary-widget__rank {
+  font-weight: 600;
+}
+
+.points-summary-widget__name {
+  color: var(--text-primary, #1a1a2e);
+}
+
+.points-summary-widget__points {
+  margin-left: auto;
+  font-weight: 700;
+  color: var(--primary-color, #4a90d9);
+}
+
+/* Add Participant Section */
+.add-participant__title {
+  margin: 0 0 var(--space-2) 0;
+  font-size: 1.1rem;
+}
+
+.add-participant__form {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.add-participant__input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  min-height: 44px;
+}
+
+.add-participant__input:focus {
+  outline: 2px solid var(--primary-color, #4a90d9);
+  outline-offset: 1px;
+}
+
+.add-participant__submit {
+  padding: 8px 16px;
+  background: var(--primary-color, #4a90d9);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+  transition: opacity var(--duration-fast, 100ms) ease;
+}
+
+.add-participant__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.add-participant__submit:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.add-participant__error {
+  color: var(--error-text, #dc3545);
+  font-size: 0.85rem;
+  margin: var(--space-1) 0 0 0;
+}
+
+.add-participant__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.add-participant__chip {
+  display: inline-block;
+  padding: 4px 10px;
+  background: var(--chip-bg, #e9ecef);
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
+/* Draft Actions */
+.league-dashboard__draft-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.league-dashboard__start-draft-btn {
+  padding: 12px 24px;
+  background: var(--primary-color, #4a90d9);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  min-height: 44px;
+  transition: opacity var(--duration-fast, 100ms) ease;
+}
+
+.league-dashboard__start-draft-btn:hover {
+  opacity: 0.9;
+}
+
+.league-dashboard__draft-in-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--warning-bg, #fff3cd);
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.league-dashboard__draft-in-progress a {
+  color: var(--primary-color, #4a90d9);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.league-dashboard__draft-in-progress a:hover {
+  text-decoration: underline;
+}
+
+/* Standings section */
+.league-dashboard__standings {
+  position: relative;
+}
+
+/* Loading and error states */
+.league-dashboard__loading,
+.league-dashboard__error {
+  padding: var(--space-4);
+  text-align: center;
+}
+
+.league-dashboard__error a {
+  color: var(--primary-color, #4a90d9);
+  text-decoration: none;
+}
+
+.league-dashboard__error a:hover {
+  text-decoration: underline;
+}
