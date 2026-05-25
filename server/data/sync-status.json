@@ -1,10 +1,10 @@
 {
   "lastSync": {
-    "timestamp": "2026-05-25T19:08:27.905Z",
+    "timestamp": "2026-05-25T20:08:27.912Z",
     "outcome": "success",
     "error": null,
     "stats": {
-      "fixturesUpdated": 0,
+      "fixturesUpdated": 72,
       "resultsCreated": 0,
       "standingsUpdated": false
     }
