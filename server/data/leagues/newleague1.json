@@ -1,0 +1,27 @@
+{
+  "slug": "newleague1",
+  "name": "newleague1",
+  "joinCode": "kpf462",
+  "createdAt": "2026-05-26T19:41:27.899Z",
+  "participants": [
+    {
+      "id": "p1",
+      "name": "newleague1player",
+      "email": "chrisgilbert001@gmail.com"
+    },
+    {
+      "id": "p2",
+      "name": "Chris",
+      "email": "test1@test.com"
+    }
+  ],
+  "draft": {
+    "status": "not_started",
+    "order": [],
+    "currentPot": 4,
+    "currentRound": 1,
+    "currentPickIndex": 0,
+    "spinsCompleted": 0,
+    "allocations": {}
+  }
+}

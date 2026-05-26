@@ -244,3 +244,23 @@ export async function spinWheel(leagueSlug) {
 
 // Export internal functions for testing
 export { shuffleArray, getAllocatedTeamsInPot, getCurrentPicker, advanceDraftState };
+
+/**
+ * Run the entire draft from start to finish in one operation.
+ * Starts the draft (randomizes order) then performs all 48 spins.
+ * @param {string} leagueSlug
+ * @returns {Promise<object>} The final league data with completed draft
+ * @throws {object} 400 if not exactly 6 participants or draft already started/completed
+ */
+export async function runFullDraft(leagueSlug) {
+  // Start the draft first
+  await startDraft(leagueSlug);
+
+  // Run all 48 spins
+  for (let i = 0; i < 48; i++) {
+    await spinWheel(leagueSlug);
+  }
+
+  // Return the final state
+  return await readFile(`leagues/${leagueSlug}.json`);
+}

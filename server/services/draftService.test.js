@@ -44,12 +44,12 @@ async function createLeagueWith6Participants(name) {
   const leagueName = name || uniqueLeagueName();
   const league = await createLeague(leagueName);
   const slug = league.slug;
-  await addParticipant(slug, 'Alice');
-  await addParticipant(slug, 'Bob');
-  await addParticipant(slug, 'Charlie');
-  await addParticipant(slug, 'Diana');
-  await addParticipant(slug, 'Eve');
-  await addParticipant(slug, 'Frank');
+  await addParticipant(slug, 'Alice', 'alice@example.com');
+  await addParticipant(slug, 'Bob', 'bob@example.com');
+  await addParticipant(slug, 'Charlie', 'charlie@example.com');
+  await addParticipant(slug, 'Diana', 'diana@example.com');
+  await addParticipant(slug, 'Eve', 'eve@example.com');
+  await addParticipant(slug, 'Frank', 'frank@example.com');
   return slug;
 }
 
@@ -227,8 +227,8 @@ describe('draftService', () => {
 
     it('rejects draft start with fewer than 6 participants', async () => {
       const league = await createLeague(uniqueLeagueName());
-      await addParticipant(league.slug, 'Alice');
-      await addParticipant(league.slug, 'Bob');
+      await addParticipant(league.slug, 'Alice', 'alice@example.com');
+      await addParticipant(league.slug, 'Bob', 'bob@example.com');
 
       await expect(startDraft(league.slug)).rejects.toMatchObject({
         statusCode: 400,

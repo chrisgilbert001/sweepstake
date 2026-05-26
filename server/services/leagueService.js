@@ -105,10 +105,11 @@ export async function getLeagueByJoinCode(joinCode) {
 /**
  * Create a new league.
  * @param {string} name
+ * @param {string} [creatorEmail] - Email of the league creator (optional, sets ownership)
  * @returns {Promise<object>} The created league data
  * @throws {object} 400 for invalid name, 409 for duplicate name
  */
-export async function createLeague(name) {
+export async function createLeague(name, creatorEmail) {
   if (!validateName(name)) {
     throw { statusCode: 400, message: 'League name must be between 1 and 50 characters and contain at least one non-whitespace character' };
   }
@@ -129,6 +130,7 @@ export async function createLeague(name) {
     slug,
     name,
     joinCode,
+    createdBy: creatorEmail ? creatorEmail.trim().toLowerCase() : null,
     createdAt: new Date().toISOString(),
     participants: [],
     draft: {
@@ -147,16 +149,34 @@ export async function createLeague(name) {
 }
 
 /**
+ * Validate an email address (basic format check).
+ * @param {string} email
+ * @returns {boolean}
+ */
+export function validateEmail(email) {
+  if (typeof email !== 'string') return false;
+  if (email.length > 254) return false;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+/**
  * Add a participant to a league.
  * @param {string} slug
  * @param {string} name
+ * @param {string} email
  * @returns {Promise<object>} The updated league data
- * @throws {object} 400 for invalid name or max participants, 404 for not found, 409 for duplicate name
+ * @throws {object} 400 for invalid name/email or max participants, 404 for not found, 409 for duplicate name
  */
-export async function addParticipant(slug, name) {
+export async function addParticipant(slug, name, email) {
   if (!validateName(name)) {
     throw { statusCode: 400, message: 'Participant name must be between 1 and 50 characters and contain at least one non-whitespace character' };
   }
+
+  if (!validateEmail(email)) {
+    throw { statusCode: 400, message: 'A valid email address is required' };
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
 
   const updated = await updateFile(`leagues/${slug}.json`, (league) => {
     // Check max participants
@@ -173,8 +193,72 @@ export async function addParticipant(slug, name) {
     const id = `p${league.participants.length + 1}`;
     return {
       ...league,
-      participants: [...league.participants, { id, name }]
+      participants: [...league.participants, { id, name, email: normalizedEmail }]
     };
+  });
+
+  return updated;
+}
+
+/**
+ * Get all leagues that a participant (by email) belongs to.
+ * Returns league slug, name, participant name, and their position in standings.
+ * @param {string} email
+ * @returns {Promise<Array<{ slug: string, name: string, participantName: string, participantId: string }>>}
+ */
+export async function getLeaguesByEmail(email) {
+  if (!validateEmail(email)) {
+    throw { statusCode: 400, message: 'A valid email address is required' };
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const slugs = await listLeagues();
+  const results = [];
+
+  for (const slug of slugs) {
+    const league = await readFile(`leagues/${slug}.json`);
+    const participant = league.participants.find(p => p.email === normalizedEmail);
+    if (participant) {
+      results.push({
+        slug: league.slug,
+        name: league.name,
+        participantName: participant.name,
+        participantId: participant.id
+      });
+    }
+  }
+
+  return results;
+}
+
+/**
+ * Mark the draft reveal as seen for a participant (by email).
+ * Sets `draftSeen: true` on the participant object.
+ * @param {string} slug
+ * @param {string} email
+ * @returns {Promise<object>} The updated league data
+ * @throws {object} 400 for invalid email, 404 for not found or participant not in league
+ */
+export async function markDraftSeen(slug, email) {
+  if (!validateEmail(email)) {
+    throw { statusCode: 400, message: 'A valid email address is required' };
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const updated = await updateFile(`leagues/${slug}.json`, (league) => {
+    const participantIndex = league.participants.findIndex(p => p.email === normalizedEmail);
+    if (participantIndex === -1) {
+      throw { statusCode: 404, message: 'Participant not found in this league' };
+    }
+
+    const newParticipants = [...league.participants];
+    newParticipants[participantIndex] = {
+      ...newParticipants[participantIndex],
+      draftSeen: true
+    };
+
+    return { ...league, participants: newParticipants };
   });
 
   return updated;

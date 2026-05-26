@@ -139,7 +139,7 @@ export default function DraftSession() {
   }
 
   // Draft not started yet
-  if (!draftState && league.draft && league.draft.status === 'not_started') {
+  if (!draftState && (!league.draft || league.draft.status === 'not_started')) {
     return (
       <div className="container draft-session">
         <div className="draft-header">
@@ -159,6 +159,15 @@ export default function DraftSession() {
             {starting ? 'Starting...' : 'Start Draft'}
           </button>
         </div>
+      </div>
+    );
+  }
+
+  // Still loading draft state
+  if (!draftState) {
+    return (
+      <div className="container draft-session">
+        <div className="draft-loading">Loading draft...</div>
       </div>
     );
   }

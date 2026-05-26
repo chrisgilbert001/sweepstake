@@ -12,6 +12,14 @@
   max-width: 600px;
 }
 
+.home-hero--compact {
+  margin-bottom: var(--space-xl);
+}
+
+.home-hero--compact h1 {
+  margin-bottom: var(--space-xs);
+}
+
 .home-hero h1 {
   color: var(--color-primary-dark);
   margin-bottom: var(--space-md);
@@ -29,6 +37,36 @@
   line-height: var(--line-height-relaxed);
 }
 
+.home-section-desc {
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.home-user-email {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+}
+
+.home-change-user {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.home-change-user:hover {
+  color: var(--color-primary-light);
+}
+
+/* Create section (used for email entry and create league) */
 .home-create-section {
   width: 100%;
   max-width: 480px;
@@ -39,7 +77,7 @@
 }
 
 .home-create-section h2 {
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-sm);
   color: var(--color-text);
 }
 
@@ -101,6 +139,7 @@
   font-weight: var(--font-weight-semibold);
   transition: background-color var(--transition-fast);
   min-height: 44px;
+  cursor: pointer;
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -110,6 +149,131 @@
 .btn-primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-lg);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  cursor: pointer;
+  min-height: 44px;
+  transition: background-color var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  background: var(--color-bg-muted);
+}
+
+/* Leagues section */
+.home-leagues-section {
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: var(--space-xl);
+}
+
+.home-leagues-loading,
+.home-leagues-error {
+  text-align: center;
+  padding: var(--space-lg);
+  color: var(--color-text-light);
+}
+
+.home-leagues-error {
+  color: var(--color-error);
+}
+
+.home-leagues-empty {
+  text-align: center;
+  padding: var(--space-xl);
+  color: var(--color-text-light);
+}
+
+.home-leagues-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.home-league-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.home-league-card:hover,
+.home-league-card:focus-visible {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.home-league-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.home-league-card__name {
+  margin: 0 0 2px;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+}
+
+.home-league-card__participant {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+.home-league-card__arrow {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-light);
+  margin-left: var(--space-md);
+}
+
+/* Actions section */
+.home-actions-section {
+  width: 100%;
+  max-width: 480px;
+}
+
+.home-create-btn {
+  width: 100%;
+}
+
+.home-create-form-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.home-create-form-card h3 {
+  margin: 0 0 var(--space-md);
+  color: var(--color-text);
+}
+
+.home-create-form-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.home-create-form-actions .btn-primary {
+  flex: 1;
+}
+
+.form-hint {
+  color: var(--color-text-light);
+  font-size: var(--font-size-xs);
+  margin-top: var(--space-xs);
 }
 
 @media (max-width: 480px) {

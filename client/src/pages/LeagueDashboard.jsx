@@ -1,12 +1,13 @@
 import { useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useLeague } from '../context/LeagueContext.jsx';
-import { addParticipant } from '../api/leagues.js';
+import { runFullDraft } from '../api/draft.js';
 import { getTournamentOdds, getMatchOdds } from '../api/odds.js';
 import Card from '../components/ui/Card.jsx';
 import StandingsTable from '../components/StandingsTable.jsx';
 import ShareExportButtons from '../components/ShareExportButtons.jsx';
 import TeamDetailModal from '../components/TeamDetailModal.jsx';
+import DraftRevealDialog from '../components/DraftRevealDialog.jsx';
 import './LeagueDashboard.css';
 
 /**
@@ -18,13 +19,14 @@ export default function LeagueDashboard() {
   const { slug } = useParams();
   const { league, participants, draftStatus, teams, results, loading, error, refetch } = useLeague();
 
-  // Add participant form state
-  const [participantName, setParticipantName] = useState('');
-  const [addingParticipant, setAddingParticipant] = useState(false);
-  const [formError, setFormError] = useState('');
-
   // Copy link state
   const [copied, setCopied] = useState(false);
+
+  // Draft run state
+  const [runningDraft, setRunningDraft] = useState(false);
+
+  // Draft reveal dialog state
+  const [showReveal, setShowReveal] = useState(true);
 
   // Team detail modal state
   const [selectedTeamId, setSelectedTeamId] = useState(null);
@@ -185,35 +187,25 @@ export default function LeagueDashboard() {
     return eliminated;
   }
 
-  async function handleAddParticipant(e) {
-    e.preventDefault();
-    setFormError('');
-
-    const trimmed = participantName.trim();
-    if (!trimmed || trimmed.length > 50) {
-      setFormError('Name must be between 1 and 50 characters');
-      return;
-    }
-
-    setAddingParticipant(true);
-    try {
-      await addParticipant(slug, trimmed);
-      setParticipantName('');
-      // Refetch league data from context to update participants
-      await refetch();
-    } catch (err) {
-      setFormError(err.message || 'Failed to add participant');
-    } finally {
-      setAddingParticipant(false);
-    }
-  }
-
   function handleCopyLink() {
     const joinUrl = `${window.location.origin}/join/${league.joinCode}`;
     navigator.clipboard.writeText(joinUrl).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  }
+
+  async function handleRunDraft() {
+    setRunningDraft(true);
+    try {
+      await runFullDraft(slug);
+      await refetch();
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(err.message || 'Failed to run draft');
+    } finally {
+      setRunningDraft(false);
+    }
   }
 
   function handleTeamClick(teamId) {
@@ -267,13 +259,32 @@ export default function LeagueDashboard() {
   const participantCount = participants.length;
   const standings = computeStandings();
   const eliminatedTeams = getEliminatedTeams();
+
+  // Check if current user is the league owner
+  const currentEmail = localStorage.getItem('sweepstake_user_email') || '';
+  const isOwner = league.createdBy && league.createdBy === currentEmail;
+  const currentParticipant = participants.find(p => p.email === currentEmail);
   const selectedTeam = teams.find((t) => t.id === selectedTeamId);
 
   // Points summary: show the league leader's stats
   const leader = standings.length > 0 ? standings[0] : null;
 
+  // Show draft reveal dialog on first visit after draft completes
+  const shouldReveal = draftStatus === 'completed' && currentParticipant &&
+    showReveal && !currentParticipant.draftSeen;
+
   return (
     <div className="league-dashboard">
+      {shouldReveal && (
+        <DraftRevealDialog
+          slug={slug}
+          allocations={league.draft?.allocations || {}}
+          participantId={currentParticipant.id}
+          email={currentEmail}
+          teams={teams}
+          onClose={() => setShowReveal(false)}
+        />
+      )}
       {/* Dashboard Header */}
       <div className="league-dashboard__header">
         <div className="league-dashboard__meta">
@@ -304,31 +315,11 @@ export default function LeagueDashboard() {
         )}
       </div>
 
-      {/* Add Participant section — shown when less than 6 participants (task 7.4: flat Card) */}
+      {/* Participant list — shown when less than 6 participants */}
       {participantCount < 6 && (
         <Card elevation="flat">
-          <h3 className="add-participant__title">Add Participant</h3>
-          <form className="add-participant__form" onSubmit={handleAddParticipant}>
-            <input
-              type="text"
-              className="add-participant__input"
-              value={participantName}
-              onChange={(e) => setParticipantName(e.target.value)}
-              placeholder="Enter participant name"
-              maxLength={50}
-              disabled={addingParticipant}
-              aria-label="Participant name"
-            />
-            <button
-              type="submit"
-              className="add-participant__submit"
-              disabled={addingParticipant || !participantName.trim()}
-            >
-              {addingParticipant ? 'Adding...' : 'Add'}
-            </button>
-          </form>
-          {formError && <p className="add-participant__error">{formError}</p>}
-
+          <h3 className="add-participant__title">Participants ({participantCount}/6)</h3>
+          <p className="add-participant__hint">Share the join link to invite others.</p>
           {participantCount > 0 && (
             <div className="add-participant__chips">
               {participants.map((p) => (
@@ -342,11 +333,23 @@ export default function LeagueDashboard() {
       )}
 
       {/* Draft actions */}
-      {participantCount === 6 && draftStatus === 'not_started' && (
+      {participantCount === 6 && draftStatus === 'not_started' && isOwner && (
         <div className="league-dashboard__draft-actions">
-          <Link to={`/league/${slug}/draft`}>
-            <button className="league-dashboard__start-draft-btn">🎯 Start Draft</button>
-          </Link>
+          <button
+            className="league-dashboard__start-draft-btn"
+            onClick={handleRunDraft}
+            disabled={runningDraft}
+          >
+            {runningDraft ? '🎲 Running Draft...' : '🎯 Start Draft'}
+          </button>
+        </div>
+      )}
+
+      {participantCount === 6 && draftStatus === 'not_started' && !isOwner && (
+        <div className="league-dashboard__draft-actions">
+          <div className="league-dashboard__draft-in-progress">
+            <span>Waiting for the league owner to start the draft...</span>
+          </div>
         </div>
       )}
 

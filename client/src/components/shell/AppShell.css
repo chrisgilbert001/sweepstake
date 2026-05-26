@@ -21,6 +21,17 @@
   gap: var(--space-1);
 }
 
+.app-shell__home-link {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+}
+
+.app-shell__home-link:hover {
+  text-decoration: underline;
+}
+
 .app-shell__league-name {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);

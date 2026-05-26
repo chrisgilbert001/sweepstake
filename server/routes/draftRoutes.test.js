@@ -30,7 +30,7 @@ async function createLeagueWith6Participants(leagueName = 'Draft League') {
   for (let i = 1; i <= 6; i++) {
     await request(app)
       .post(`/api/leagues/${slug}/participants`)
-      .send({ name: `Player ${i}` });
+      .send({ name: `Player ${i}`, email: `player${i}@example.com` });
   }
 
   return slug;
@@ -74,7 +74,7 @@ describe('Draft API Routes', () => {
 
       await request(app)
         .post(`/api/leagues/${slug}/participants`)
-        .send({ name: 'Alice' });
+        .send({ name: 'Alice', email: 'alice@example.com' });
 
       const res = await request(app)
         .post(`/api/leagues/${slug}/draft/start`);

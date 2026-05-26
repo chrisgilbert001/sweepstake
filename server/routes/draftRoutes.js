@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { startDraft, getDraftState, spinWheel } from '../services/draftService.js';
+import { startDraft, getDraftState, spinWheel, runFullDraft } from '../services/draftService.js';
 import { getLeague } from '../services/leagueService.js';
 
 const router = Router();
@@ -52,6 +52,24 @@ router.post('/leagues/:slug/draft/spin', async (req, res, next) => {
     await getLeague(req.params.slug);
     const result = await spinWheel(req.params.slug);
     res.json(result);
+  } catch (err) {
+    if (err.statusCode) {
+      return res.status(err.statusCode).json({ error: err.message });
+    }
+    next(err);
+  }
+});
+
+/**
+ * POST /api/leagues/:slug/draft/run
+ * Run the entire draft from start to finish (all 48 spins).
+ * Returns the completed league data.
+ */
+router.post('/leagues/:slug/draft/run', async (req, res, next) => {
+  try {
+    await getLeague(req.params.slug);
+    const league = await runFullDraft(req.params.slug);
+    res.json(league);
   } catch (err) {
     if (err.statusCode) {
       return res.status(err.statusCode).json({ error: err.message });

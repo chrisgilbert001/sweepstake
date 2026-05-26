@@ -1,0 +1,16 @@
+{
+  "slug": "test-4",
+  "name": "test-4",
+  "joinCode": "7rdaye",
+  "createdAt": "2026-05-26T19:41:02.620Z",
+  "participants": [],
+  "draft": {
+    "status": "not_started",
+    "order": [],
+    "currentPot": 4,
+    "currentRound": 1,
+    "currentPickIndex": 0,
+    "spinsCompleted": 0,
+    "allocations": {}
+  }
+}

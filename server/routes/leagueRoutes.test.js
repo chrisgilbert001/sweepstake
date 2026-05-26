@@ -122,17 +122,35 @@ describe('League API Routes', () => {
     it('adds a participant and returns 201', async () => {
       const res = await request(app)
         .post('/api/leagues/participant-league/participants')
-        .send({ name: 'Alice' });
+        .send({ name: 'Alice', email: 'alice@example.com' });
 
       expect(res.status).toBe(201);
       expect(res.body.participants).toHaveLength(1);
-      expect(res.body.participants[0]).toEqual({ id: 'p1', name: 'Alice' });
+      expect(res.body.participants[0]).toEqual({ id: 'p1', name: 'Alice', email: 'alice@example.com' });
     });
 
     it('returns 400 for invalid participant name', async () => {
       const res = await request(app)
         .post('/api/leagues/participant-league/participants')
-        .send({ name: '' });
+        .send({ name: '', email: 'a@b.com' });
+
+      expect(res.status).toBe(400);
+      expect(res.body.error).toBeDefined();
+    });
+
+    it('returns 400 for missing email', async () => {
+      const res = await request(app)
+        .post('/api/leagues/participant-league/participants')
+        .send({ name: 'Alice' });
+
+      expect(res.status).toBe(400);
+      expect(res.body.error).toBeDefined();
+    });
+
+    it('returns 400 for invalid email', async () => {
+      const res = await request(app)
+        .post('/api/leagues/participant-league/participants')
+        .send({ name: 'Alice', email: 'notanemail' });
 
       expect(res.status).toBe(400);
       expect(res.body.error).toBeDefined();
@@ -141,11 +159,11 @@ describe('League API Routes', () => {
     it('returns 409 for duplicate participant name', async () => {
       await request(app)
         .post('/api/leagues/participant-league/participants')
-        .send({ name: 'Alice' });
+        .send({ name: 'Alice', email: 'alice@example.com' });
 
       const res = await request(app)
         .post('/api/leagues/participant-league/participants')
-        .send({ name: 'Alice' });
+        .send({ name: 'Alice', email: 'different@example.com' });
 
       expect(res.status).toBe(409);
       expect(res.body.error).toBe('Participant name already used in this league');
@@ -155,12 +173,12 @@ describe('League API Routes', () => {
       for (let i = 1; i <= 6; i++) {
         await request(app)
           .post('/api/leagues/participant-league/participants')
-          .send({ name: `Player ${i}` });
+          .send({ name: `Player ${i}`, email: `p${i}@example.com` });
       }
 
       const res = await request(app)
         .post('/api/leagues/participant-league/participants')
-        .send({ name: 'Player 7' });
+        .send({ name: 'Player 7', email: 'p7@example.com' });
 
       expect(res.status).toBe(400);
       expect(res.body.error).toBe('League already has maximum 6 participants');
@@ -205,17 +223,18 @@ describe('League API Routes', () => {
     it('adds a participant via join code and returns 201', async () => {
       const res = await request(app)
         .post(`/api/leagues/join/${joinCode}`)
-        .send({ name: 'Charlie' });
+        .send({ name: 'Charlie', email: 'charlie@example.com' });
 
       expect(res.status).toBe(201);
       expect(res.body.participants).toHaveLength(1);
       expect(res.body.participants[0].name).toBe('Charlie');
+      expect(res.body.participants[0].email).toBe('charlie@example.com');
     });
 
     it('returns 404 for invalid join code', async () => {
       const res = await request(app)
         .post('/api/leagues/join/zzzzzz')
-        .send({ name: 'Charlie' });
+        .send({ name: 'Charlie', email: 'charlie@example.com' });
 
       expect(res.status).toBe(404);
       expect(res.body.error).toBe('League not found');
@@ -224,7 +243,16 @@ describe('League API Routes', () => {
     it('returns 400 for invalid participant name', async () => {
       const res = await request(app)
         .post(`/api/leagues/join/${joinCode}`)
-        .send({ name: '' });
+        .send({ name: '', email: 'charlie@example.com' });
+
+      expect(res.status).toBe(400);
+      expect(res.body.error).toBeDefined();
+    });
+
+    it('returns 400 for missing email', async () => {
+      const res = await request(app)
+        .post(`/api/leagues/join/${joinCode}`)
+        .send({ name: 'Charlie' });
 
       expect(res.status).toBe(400);
       expect(res.body.error).toBeDefined();
@@ -233,11 +261,11 @@ describe('League API Routes', () => {
     it('returns 409 for duplicate participant name via join', async () => {
       await request(app)
         .post(`/api/leagues/join/${joinCode}`)
-        .send({ name: 'Charlie' });
+        .send({ name: 'Charlie', email: 'charlie@example.com' });
 
       const res = await request(app)
         .post(`/api/leagues/join/${joinCode}`)
-        .send({ name: 'Charlie' });
+        .send({ name: 'Charlie', email: 'other@example.com' });
 
       expect(res.status).toBe(409);
       expect(res.body.error).toBe('Participant name already used in this league');
@@ -247,15 +275,52 @@ describe('League API Routes', () => {
       for (let i = 1; i <= 6; i++) {
         await request(app)
           .post(`/api/leagues/join/${joinCode}`)
-          .send({ name: `Player ${i}` });
+          .send({ name: `Player ${i}`, email: `p${i}@example.com` });
       }
 
       const res = await request(app)
         .post(`/api/leagues/join/${joinCode}`)
-        .send({ name: 'Player 7' });
+        .send({ name: 'Player 7', email: 'p7@example.com' });
 
       expect(res.status).toBe(400);
       expect(res.body.error).toBe('League already has maximum 6 participants');
+    });
+  });
+
+  describe('GET /api/me/:email/leagues', () => {
+    it('returns leagues for a participant email', async () => {
+      await request(app).post('/api/leagues').send({ name: 'League One' });
+      await request(app).post('/api/leagues').send({ name: 'League Two' });
+
+      await request(app)
+        .post('/api/leagues/league-one/participants')
+        .send({ name: 'Alice', email: 'alice@example.com' });
+      await request(app)
+        .post('/api/leagues/league-two/participants')
+        .send({ name: 'Ally', email: 'alice@example.com' });
+
+      const res = await request(app)
+        .get('/api/me/alice@example.com/leagues');
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveLength(2);
+      expect(res.body.map(l => l.slug).sort()).toEqual(['league-one', 'league-two']);
+    });
+
+    it('returns empty array for unknown email', async () => {
+      const res = await request(app)
+        .get('/api/me/nobody@example.com/leagues');
+
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual([]);
+    });
+
+    it('returns 400 for invalid email', async () => {
+      const res = await request(app)
+        .get('/api/me/notanemail/leagues');
+
+      expect(res.status).toBe(400);
+      expect(res.body.error).toBeDefined();
     });
   });
 

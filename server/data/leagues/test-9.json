@@ -1,0 +1,166 @@
+{
+  "slug": "test-9",
+  "name": "test-9",
+  "joinCode": "y4xgjz",
+  "createdBy": "chrisgilbert001@gmail.com",
+  "createdAt": "2026-05-26T20:02:04.872Z",
+  "participants": [
+    {
+      "id": "p1",
+      "name": "banana",
+      "email": "banana@gmail.com",
+      "draftSeen": true
+    },
+    {
+      "id": "p2",
+      "name": "Chris",
+      "email": "chrisgilbert001@gmail.com",
+      "draftSeen": true
+    },
+    {
+      "id": "p3",
+      "name": "Sarah",
+      "email": "sarah@example.com"
+    },
+    {
+      "id": "p4",
+      "name": "Mike",
+      "email": "mike@example.com"
+    },
+    {
+      "id": "p5",
+      "name": "Emma",
+      "email": "emma@example.com"
+    },
+    {
+      "id": "p6",
+      "name": "Jake",
+      "email": "jake@example.com"
+    }
+  ],
+  "draft": {
+    "status": "completed",
+    "order": [
+      "p3",
+      "p5",
+      "p1",
+      "p4",
+      "p6",
+      "p2"
+    ],
+    "currentPot": 1,
+    "currentRound": 2,
+    "currentPickIndex": 5,
+    "spinsCompleted": 48,
+    "allocations": {
+      "p1": {
+        "pot1": [
+          "mex",
+          "ned"
+        ],
+        "pot2": [
+          "sen",
+          "cro"
+        ],
+        "pot3": [
+          "egy",
+          "uzb"
+        ],
+        "pot4": [
+          "jor",
+          "hai"
+        ]
+      },
+      "p2": {
+        "pot1": [
+          "eng",
+          "ger"
+        ],
+        "pot2": [
+          "jpn",
+          "uru"
+        ],
+        "pot3": [
+          "sco",
+          "pan"
+        ],
+        "pot4": [
+          "gha",
+          "irq"
+        ]
+      },
+      "p3": {
+        "pot1": [
+          "bra",
+          "arg"
+        ],
+        "pot2": [
+          "irn",
+          "kor"
+        ],
+        "pot3": [
+          "nor",
+          "qat"
+        ],
+        "pot4": [
+          "cur",
+          "cod"
+        ]
+      },
+      "p4": {
+        "pot1": [
+          "esp",
+          "can"
+        ],
+        "pot2": [
+          "col",
+          "sui"
+        ],
+        "pot3": [
+          "rsa",
+          "sau"
+        ],
+        "pot4": [
+          "swe",
+          "cze"
+        ]
+      },
+      "p5": {
+        "pot1": [
+          "fra",
+          "por"
+        ],
+        "pot2": [
+          "ecu",
+          "aut"
+        ],
+        "pot3": [
+          "alg",
+          "civ"
+        ],
+        "pot4": [
+          "bih",
+          "cpv"
+        ]
+      },
+      "p6": {
+        "pot1": [
+          "usa",
+          "bel"
+        ],
+        "pot2": [
+          "mar",
+          "aus"
+        ],
+        "pot3": [
+          "par",
+          "tun"
+        ],
+        "pot4": [
+          "nzl",
+          "tur"
+        ]
+      }
+    }
+  }
+}

@@ -11,7 +11,9 @@ import {
   getLeague,
   getLeagueByJoinCode,
   addParticipant,
-  listLeagues
+  listLeagues,
+  validateEmail,
+  getLeaguesByEmail
 } from './leagueService.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -211,43 +213,120 @@ describe('leagueService', () => {
     });
 
     it('adds a participant to the league', async () => {
-      const updated = await addParticipant('participant-test', 'Alice');
+      const updated = await addParticipant('participant-test', 'Alice', 'alice@example.com');
       expect(updated.participants).toHaveLength(1);
-      expect(updated.participants[0]).toEqual({ id: 'p1', name: 'Alice' });
+      expect(updated.participants[0]).toEqual({ id: 'p1', name: 'Alice', email: 'alice@example.com' });
     });
 
     it('adds multiple participants with sequential IDs', async () => {
-      await addParticipant('participant-test', 'Alice');
-      const updated = await addParticipant('participant-test', 'Bob');
+      await addParticipant('participant-test', 'Alice', 'alice@example.com');
+      const updated = await addParticipant('participant-test', 'Bob', 'bob@example.com');
       expect(updated.participants).toHaveLength(2);
-      expect(updated.participants[1]).toEqual({ id: 'p2', name: 'Bob' });
+      expect(updated.participants[1]).toEqual({ id: 'p2', name: 'Bob', email: 'bob@example.com' });
+    });
+
+    it('normalizes email to lowercase', async () => {
+      const updated = await addParticipant('participant-test', 'Alice', 'Alice@Example.COM');
+      expect(updated.participants[0].email).toBe('alice@example.com');
     });
 
     it('rejects invalid participant names', async () => {
-      await expect(addParticipant('participant-test', '')).rejects.toMatchObject({ statusCode: 400 });
-      await expect(addParticipant('participant-test', '   ')).rejects.toMatchObject({ statusCode: 400 });
-      await expect(addParticipant('participant-test', 'a'.repeat(51))).rejects.toMatchObject({ statusCode: 400 });
+      await expect(addParticipant('participant-test', '', 'a@b.com')).rejects.toMatchObject({ statusCode: 400 });
+      await expect(addParticipant('participant-test', '   ', 'a@b.com')).rejects.toMatchObject({ statusCode: 400 });
+      await expect(addParticipant('participant-test', 'a'.repeat(51), 'a@b.com')).rejects.toMatchObject({ statusCode: 400 });
+    });
+
+    it('rejects invalid email addresses', async () => {
+      await expect(addParticipant('participant-test', 'Alice', '')).rejects.toMatchObject({ statusCode: 400 });
+      await expect(addParticipant('participant-test', 'Alice', 'notanemail')).rejects.toMatchObject({ statusCode: 400 });
+      await expect(addParticipant('participant-test', 'Alice', '@missing.com')).rejects.toMatchObject({ statusCode: 400 });
     });
 
     it('rejects duplicate participant names', async () => {
-      await addParticipant('participant-test', 'Alice');
-      await expect(addParticipant('participant-test', 'Alice')).rejects.toMatchObject({
+      await addParticipant('participant-test', 'Alice', 'alice@example.com');
+      await expect(addParticipant('participant-test', 'Alice', 'different@example.com')).rejects.toMatchObject({
         statusCode: 409,
         message: 'Participant name already used in this league'
       });
     });
 
     it('rejects more than 6 participants', async () => {
-      await addParticipant('participant-test', 'P1');
-      await addParticipant('participant-test', 'P2');
-      await addParticipant('participant-test', 'P3');
-      await addParticipant('participant-test', 'P4');
-      await addParticipant('participant-test', 'P5');
-      await addParticipant('participant-test', 'P6');
-      await expect(addParticipant('participant-test', 'P7')).rejects.toMatchObject({
+      await addParticipant('participant-test', 'P1', 'p1@example.com');
+      await addParticipant('participant-test', 'P2', 'p2@example.com');
+      await addParticipant('participant-test', 'P3', 'p3@example.com');
+      await addParticipant('participant-test', 'P4', 'p4@example.com');
+      await addParticipant('participant-test', 'P5', 'p5@example.com');
+      await addParticipant('participant-test', 'P6', 'p6@example.com');
+      await expect(addParticipant('participant-test', 'P7', 'p7@example.com')).rejects.toMatchObject({
         statusCode: 400,
         message: 'League already has maximum 6 participants'
       });
+    });
+  });
+
+  describe('validateEmail', () => {
+    it('accepts a valid email', () => {
+      expect(validateEmail('user@example.com')).toBe(true);
+    });
+
+    it('accepts emails with subdomains', () => {
+      expect(validateEmail('user@mail.example.co.uk')).toBe(true);
+    });
+
+    it('rejects empty string', () => {
+      expect(validateEmail('')).toBe(false);
+    });
+
+    it('rejects strings without @', () => {
+      expect(validateEmail('userexample.com')).toBe(false);
+    });
+
+    it('rejects strings without domain', () => {
+      expect(validateEmail('user@')).toBe(false);
+    });
+
+    it('rejects non-string values', () => {
+      expect(validateEmail(null)).toBe(false);
+      expect(validateEmail(undefined)).toBe(false);
+      expect(validateEmail(123)).toBe(false);
+    });
+  });
+
+  describe('getLeaguesByEmail', () => {
+    beforeEach(async () => {
+      await createLeague('League A');
+      await createLeague('League B');
+      await addParticipant('league-a', 'Alice', 'alice@example.com');
+      await addParticipant('league-b', 'Ally', 'alice@example.com');
+      await addParticipant('league-a', 'Bob', 'bob@example.com');
+    });
+
+    it('returns all leagues for a given email', async () => {
+      const results = await getLeaguesByEmail('alice@example.com');
+      expect(results).toHaveLength(2);
+      expect(results.map(r => r.slug).sort()).toEqual(['league-a', 'league-b']);
+    });
+
+    it('returns correct participant info per league', async () => {
+      const results = await getLeaguesByEmail('alice@example.com');
+      const leagueA = results.find(r => r.slug === 'league-a');
+      expect(leagueA.participantName).toBe('Alice');
+      const leagueB = results.find(r => r.slug === 'league-b');
+      expect(leagueB.participantName).toBe('Ally');
+    });
+
+    it('returns empty array for unknown email', async () => {
+      const results = await getLeaguesByEmail('nobody@example.com');
+      expect(results).toEqual([]);
+    });
+
+    it('is case-insensitive for email lookup', async () => {
+      const results = await getLeaguesByEmail('ALICE@EXAMPLE.COM');
+      expect(results).toHaveLength(2);
+    });
+
+    it('rejects invalid email', async () => {
+      await expect(getLeaguesByEmail('notanemail')).rejects.toMatchObject({ statusCode: 400 });
     });
   });
 

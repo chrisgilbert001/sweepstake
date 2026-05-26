@@ -38,22 +38,23 @@
 .league-dashboard__copy-btn {
   padding: 4px 12px;
   font-size: 0.8rem;
-  border: 1px solid var(--border-color, #ddd);
+  border: 1px solid var(--color-border, #ddd);
   border-radius: 6px;
-  background: var(--surface-color, #fff);
+  background: var(--color-bg, #fff);
+  color: var(--color-text, #333);
   cursor: pointer;
   transition: background-color var(--duration-fast, 100ms) ease;
   min-height: 32px;
 }
 
 .league-dashboard__copy-btn:hover {
-  background: var(--surface-hover, #f0f0f0);
+  background: var(--color-bg-muted, #f0f0f0);
 }
 
 .league-dashboard__copy-btn.copied {
-  background: var(--success-bg, #d4edda);
-  border-color: var(--success-border, #c3e6cb);
-  color: var(--success-text, #155724);
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-text-inverse, #fff);
 }
 
 /* Points Summary Widget (task 7.5, 7.6, 7.7) */
@@ -62,11 +63,12 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  background: var(--surface-color, #f8f9fa);
-  border: 1px solid var(--border-color, #e9ecef);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border, #e9ecef);
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 500;
+  color: var(--color-text);
 }
 
 .points-summary-widget__rank {
@@ -74,13 +76,13 @@
 }
 
 .points-summary-widget__name {
-  color: var(--text-primary, #1a1a2e);
+  color: var(--color-text);
 }
 
 .points-summary-widget__points {
   margin-left: auto;
   font-weight: 700;
-  color: var(--primary-color, #4a90d9);
+  color: var(--color-primary);
 }
 
 /* Add Participant Section */
@@ -138,6 +140,12 @@
   margin: var(--space-1) 0 0 0;
 }
 
+.add-participant__hint {
+  color: var(--color-text-light, #666);
+  font-size: 0.85rem;
+  margin: var(--space-1) 0 0 0;
+}
+
 .add-participant__chips {
   display: flex;
   flex-wrap: wrap;
@@ -148,7 +156,8 @@
 .add-participant__chip {
   display: inline-block;
   padding: 4px 10px;
-  background: var(--chip-bg, #e9ecef);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
   border-radius: 12px;
   font-size: 0.85rem;
 }
@@ -182,9 +191,11 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
-  background: var(--warning-bg, #fff3cd);
+  background: var(--color-bg-card, #1e1e1e);
+  border: 1px solid var(--color-primary);
   border-radius: 8px;
   font-size: 0.95rem;
+  color: var(--color-text);
 }
 
 .league-dashboard__draft-in-progress a {

@@ -98,3 +98,34 @@
     padding: var(--space-lg);
   }
 }
+
+.form-hint {
+  color: var(--color-text-light);
+  font-size: var(--font-size-xs);
+  margin-top: var(--space-xs);
+}
+
+.join-already-joined,
+.join-no-email {
+  text-align: center;
+  padding: var(--space-lg) 0;
+}
+
+.join-already-joined .notice-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+
+.join-already-joined p,
+.join-no-email p {
+  color: var(--color-text-light);
+  margin-bottom: var(--space-md);
+}
+
+.join-already-joined .btn-primary,
+.join-no-email .btn-primary {
+  display: inline-block;
+  text-decoration: none;
+}

@@ -1,0 +1,17 @@
+{
+  "slug": "kiro-test-league",
+  "name": "Kiro Test League",
+  "joinCode": "i8lsfz",
+  "createdBy": "kiro@test.com",
+  "createdAt": "2026-05-26T20:05:46.848Z",
+  "participants": [],
+  "draft": {
+    "status": "not_started",
+    "order": [],
+    "currentPot": 4,
+    "currentRound": 1,
+    "currentPickIndex": 0,
+    "spinsCompleted": 0,
+    "allocations": {}
+  }
+}

@@ -1,4 +1,4 @@
-import { Outlet, useParams, useLocation } from 'react-router-dom';
+import { Outlet, useParams, useLocation, Link } from 'react-router-dom';
 import { LeagueProvider, useLeague } from '../../context/LeagueContext.jsx';
 import NavigationBar from './NavigationBar.jsx';
 import ThemeToggle from '../ThemeToggle.jsx';
@@ -46,6 +46,9 @@ function AppShellContent() {
     <div className="app-shell">
       <header className="app-shell__header">
         <div className="app-shell__header-info">
+          <Link to="/" className="app-shell__home-link" aria-label="Back to My Leagues">
+            ← My Leagues
+          </Link>
           {loading ? (
             <h1 className="app-shell__league-name">Loading...</h1>
           ) : (

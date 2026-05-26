@@ -6,7 +6,7 @@ import { getTeams } from '../api/teams.js';
 
 const LeagueContext = createContext(undefined);
 
-const POLLING_INTERVAL = 30000; // 30 seconds
+const POLLING_INTERVAL = 10000; // 10 seconds
 
 /**
  * LeagueProvider — fetches and provides shared league data to all shell children.

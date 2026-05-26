@@ -11,3 +11,7 @@ export function getDraftState(slug) {
 export function spinWheel(slug) {
   return post(`/leagues/${slug}/draft/spin`);
 }
+
+export function runFullDraft(slug) {
+  return post(`/leagues/${slug}/draft/run`);
+}
