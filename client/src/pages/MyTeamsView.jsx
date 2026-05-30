@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLeague } from '../context/LeagueContext.jsx';
 import MyTeamsDashboard from './MyTeamsDashboard.jsx';
+import './MyTeamsView.css';
 
 /**
  * MyTeamsView — participant selector + MyTeamsDashboard rendering.

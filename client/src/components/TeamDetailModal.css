@@ -4,7 +4,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(3, 8, 6, 0.62);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -20,7 +22,8 @@
 
 .modal-content {
   background-color: var(--color-bg-card);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
   box-shadow: var(--shadow-lg);
   max-width: 600px;
   width: 100%;
@@ -78,8 +81,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
-  background-color: var(--color-bg-muted);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--gradient-accent-soft);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 22%, transparent);
   border-radius: var(--radius-md);
   margin-bottom: var(--space-lg);
 }
@@ -90,6 +94,7 @@
 }
 
 .modal-total-points-value {
+  font-family: var(--font-family-mono);
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary);
@@ -160,10 +165,12 @@
 }
 
 .match-score {
+  font-family: var(--font-family-mono);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   padding: var(--space-xs) var(--space-sm);
-  background-color: var(--color-bg-muted);
+  background-color: var(--color-bg-dark);
+  color: #eef6f0;
   border-radius: var(--radius-sm);
   min-width: 60px;
   text-align: center;
@@ -186,17 +193,17 @@
 }
 
 .match-outcome.win {
-  background-color: var(--color-bg-muted);
+  background-color: color-mix(in srgb, var(--color-success) 16%, transparent);
   color: var(--color-success);
 }
 
 .match-outcome.draw {
-  background-color: var(--color-bg-muted);
+  background-color: color-mix(in srgb, var(--color-warning) 16%, transparent);
   color: var(--color-warning);
 }
 
 .match-outcome.loss {
-  background-color: var(--color-bg-muted);
+  background-color: color-mix(in srgb, var(--color-error) 16%, transparent);
   color: var(--color-error);
 }
 

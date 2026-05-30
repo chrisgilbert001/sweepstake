@@ -96,6 +96,7 @@ export default function NavigationBar({ leagueSlug, participants = [] }) {
   const renderNavItem = (item) => {
     const isActive = getIsActive(item);
     const isPressed = pressedItem === item.id;
+    const Icon = item.icon;
 
     const className = [
       'nav-item',
@@ -118,7 +119,7 @@ export default function NavigationBar({ leagueSlug, participants = [] }) {
         onMouseLeave={handlePressEnd}
       >
         <span className="nav-item__icon" aria-hidden="true">
-          {item.icon}
+          <Icon />
         </span>
         <span className="nav-item__label">{item.label}</span>
       </Link>
@@ -172,6 +173,7 @@ export default function NavigationBar({ leagueSlug, participants = [] }) {
                 {overflowItems.map((item) => {
                   const isActive = getIsActive(item);
                   const isPressed = pressedItem === item.id;
+                  const Icon = item.icon;
 
                   return (
                     <Link
@@ -196,7 +198,7 @@ export default function NavigationBar({ leagueSlug, participants = [] }) {
                         className="nav-overflow-item__icon"
                         aria-hidden="true"
                       >
-                        {item.icon}
+                        <Icon />
                       </span>
                       <span className="nav-overflow-item__label">
                         {item.label}

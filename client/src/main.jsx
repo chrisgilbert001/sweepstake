@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles/variables.css';
 import './styles/global.css';
+import './styles/components.css';
 import App from './App.jsx';
 
 createRoot(document.getElementById('root')).render(
@@ -26,8 +27,8 @@ function updateManifestStartUrl() {
         description: "World Cup Sweepstake league tracker",
         start_url: currentPath,
         display: "standalone",
-        background_color: "#ffffff",
-        theme_color: "#1a5f2a",
+        background_color: "#0b1512",
+        theme_color: "#0b1512",
         icons: [
           { src: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
           { src: "/icons/icon-512x512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }

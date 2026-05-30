@@ -44,7 +44,7 @@
 
 .tab-panel__tab:hover {
   color: var(--color-text, #212529);
-  background-color: var(--color-bg-muted, #e9ecef);
+  background-color: color-mix(in srgb, var(--color-primary) 8%, transparent);
 }
 
 .tab-panel__tab:focus-visible {
@@ -55,7 +55,7 @@
 /* Active Tab Indicator */
 .tab-panel__tab--active {
   color: var(--color-primary, #1a5f2a);
-  font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-bold, 700);
 }
 
 .tab-panel__tab--active::after {
@@ -65,7 +65,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background-color: var(--color-primary, #1a5f2a);
+  background: var(--gradient-accent);
   border-radius: 3px 3px 0 0;
 }
 

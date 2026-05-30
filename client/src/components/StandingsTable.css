@@ -1,22 +1,26 @@
 .standings-container {
   width: 100%;
   overflow-x: auto;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
+  background: var(--color-bg-card);
+  box-shadow: var(--elevation-raised);
 }
 
 .standings-complete-banner {
-  background-color: var(--color-secondary);
-  color: var(--color-text);
+  background: var(--gradient-accent);
+  color: #06140f;
   text-align: center;
   padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-md);
-  font-weight: var(--font-weight-semibold);
-  margin-bottom: var(--space-md);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-wide);
 }
 
 .standings-table {
   width: 100%;
   border-collapse: collapse;
   font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
 }
 
 .standings-table th,
@@ -27,12 +31,15 @@
 }
 
 .standings-table th {
-  background-color: var(--color-primary);
-  color: var(--color-text-inverse);
-  font-weight: var(--font-weight-semibold);
+  position: sticky;
+  top: 0;
+  background-color: var(--color-bg-dark);
+  color: #eef6f0;
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
   font-size: var(--font-size-xs);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--tracking-wider);
   white-space: nowrap;
 }
 
@@ -61,7 +68,7 @@
 }
 
 .standings-table tbody tr:nth-child(even) {
-  background-color: var(--color-bg);
+  background-color: color-mix(in srgb, var(--color-bg-muted) 45%, transparent);
 }
 
 .rank-cell {
@@ -175,7 +182,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(3, 8, 6, 0.6);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -335,7 +344,7 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
   color: var(--color-error);
-  background: #f8d7da;
+  background: color-mix(in srgb, var(--color-error) 18%, transparent);
   padding: 1px 6px;
   border-radius: var(--radius-sm);
 }

@@ -1,8 +1,7 @@
-/* LeagueDashboard — task 7.8: 24px spacing between Card sections */
 .league-dashboard {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-4);
 }
 
 .league-dashboard__header {
@@ -19,8 +18,8 @@
 }
 
 .league-dashboard__participant-count {
-  font-size: 0.9rem;
-  color: var(--text-secondary, #666);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 }
 
 .league-dashboard__join-link {
@@ -30,49 +29,55 @@
 }
 
 .league-dashboard__join-url {
-  font-size: 0.8rem;
-  color: var(--text-secondary, #666);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-family-mono);
+  color: var(--color-text-muted);
   word-break: break-all;
 }
 
 .league-dashboard__copy-btn {
-  padding: 4px 12px;
-  font-size: 0.8rem;
-  border: 1px solid var(--color-border, #ddd);
-  border-radius: 6px;
-  background: var(--color-bg, #fff);
-  color: var(--color-text, #333);
+  padding: 4px 14px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--glass-bg);
+  color: var(--color-text);
   cursor: pointer;
-  transition: background-color var(--duration-fast, 100ms) ease;
+  transition: background-color var(--duration-fast) var(--ease-default),
+              border-color var(--duration-fast) var(--ease-default);
   min-height: 32px;
 }
 
 .league-dashboard__copy-btn:hover {
-  background: var(--color-bg-muted, #f0f0f0);
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 .league-dashboard__copy-btn.copied {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--color-text-inverse, #fff);
+  background: var(--gradient-accent);
+  border-color: transparent;
+  color: #06140f;
 }
 
-/* Points Summary Widget (task 7.5, 7.6, 7.7) */
+/* Points Summary Widget */
 .points-summary-widget {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border, #e9ecef);
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
+  padding: var(--space-3) var(--space-4);
+  background: var(--gradient-accent-soft);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 24%, transparent);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text);
 }
 
 .points-summary-widget__rank {
-  font-weight: 600;
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-black);
+  color: var(--color-primary);
 }
 
 .points-summary-widget__name {
@@ -81,14 +86,16 @@
 
 .points-summary-widget__points {
   margin-left: auto;
+  font-family: var(--font-family-mono);
   font-weight: 700;
+  font-size: var(--font-size-lg);
   color: var(--color-primary);
 }
 
 /* Add Participant Section */
 .add-participant__title {
   margin: 0 0 var(--space-2) 0;
-  font-size: 1.1rem;
+  font-size: var(--font-size-lg);
 }
 
 .add-participant__form {
@@ -100,66 +107,77 @@
 .add-participant__input {
   flex: 1;
   padding: 8px 12px;
-  border: 1px solid var(--color-border, #ddd);
-  border-radius: 6px;
-  font-size: 0.95rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
   min-height: 44px;
-  background: var(--color-bg);
+  background: var(--color-bg-card);
   color: var(--color-text);
+  transition: border-color var(--duration-fast) var(--ease-default),
+              box-shadow var(--duration-fast) var(--ease-default);
 }
 
 .add-participant__input:focus {
-  outline: 2px solid var(--primary-color, #4a90d9);
-  outline-offset: 1px;
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 22%, transparent);
 }
 
 .add-participant__submit {
-  padding: 8px 16px;
-  background: var(--primary-color, #4a90d9);
-  color: #fff;
+  padding: 8px 18px;
+  background: var(--gradient-accent);
+  color: #06140f;
   border: none;
-  border-radius: 6px;
-  font-size: 0.95rem;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
   cursor: pointer;
   min-height: 44px;
-  transition: opacity var(--duration-fast, 100ms) ease;
+  box-shadow: var(--glow-primary);
+  transition: transform var(--duration-fast) var(--ease-default),
+              filter var(--duration-fast) var(--ease-default);
 }
 
 .add-participant__submit:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .add-participant__submit:hover:not(:disabled) {
-  opacity: 0.9;
+  transform: translateY(-1px);
+  filter: brightness(1.05);
 }
 
 .add-participant__error {
-  color: var(--error-text, #dc3545);
-  font-size: 0.85rem;
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
   margin: var(--space-1) 0 0 0;
 }
 
 .add-participant__hint {
-  color: var(--color-text-light, #666);
-  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
   margin: var(--space-1) 0 0 0;
 }
 
 .add-participant__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1);
+  gap: var(--space-2);
   margin-top: var(--space-2);
 }
 
 .add-participant__chip {
-  display: inline-block;
-  padding: 4px 10px;
-  background: var(--color-primary);
-  color: var(--color-text-inverse);
-  border-radius: 12px;
-  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: var(--gradient-accent-soft);
+  color: var(--color-primary);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 28%, transparent);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
 }
 
 /* Draft Actions */
@@ -170,37 +188,43 @@
 }
 
 .league-dashboard__start-draft-btn {
-  padding: 12px 24px;
-  background: var(--primary-color, #4a90d9);
-  color: #fff;
+  padding: 14px 28px;
+  background: var(--gradient-accent);
+  color: #06140f;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
+  border-radius: var(--radius-md);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
   cursor: pointer;
-  min-height: 44px;
-  transition: opacity var(--duration-fast, 100ms) ease;
+  min-height: 48px;
+  box-shadow: var(--glow-primary);
+  transition: transform var(--duration-fast) var(--ease-default),
+              filter var(--duration-fast) var(--ease-default);
 }
 
 .league-dashboard__start-draft-btn:hover {
-  opacity: 0.9;
+  transform: translateY(-1px);
+  filter: brightness(1.05);
 }
 
 .league-dashboard__draft-in-progress {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-2) var(--space-3);
-  background: var(--color-bg-card, #1e1e1e);
-  border: 1px solid var(--color-primary);
-  border-radius: 8px;
-  font-size: 0.95rem;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg-card);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
   color: var(--color-text);
 }
 
 .league-dashboard__draft-in-progress a {
-  color: var(--primary-color, #4a90d9);
-  font-weight: 500;
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
   text-decoration: none;
 }
 
@@ -216,15 +240,22 @@
 /* Loading and error states */
 .league-dashboard__loading,
 .league-dashboard__error {
-  padding: var(--space-4);
+  padding: var(--space-5);
   text-align: center;
 }
 
 .league-dashboard__error a {
-  color: var(--primary-color, #4a90d9);
+  color: var(--color-primary);
   text-decoration: none;
 }
 
 .league-dashboard__error a:hover {
   text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .add-participant__submit:hover:not(:disabled),
+  .league-dashboard__start-draft-btn:hover {
+    transform: none;
+  }
 }

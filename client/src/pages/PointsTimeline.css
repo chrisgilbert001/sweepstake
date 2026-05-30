@@ -17,9 +17,18 @@
 }
 
 .points-timeline-header a {
-  color: var(--color-primary, #2563eb);
+  color: var(--color-primary);
   text-decoration: none;
   font-size: 0.9rem;
+}
+
+.chart-container {
+  background: var(--color-bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--elevation-raised);
+  padding: var(--space-lg);
+  box-sizing: border-box;
 }
 
 .points-timeline-header a:hover {
@@ -47,14 +56,14 @@
 }
 
 .points-timeline-empty .empty-message {
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--color-text-muted);
   font-size: 1.1rem;
   margin: var(--space-lg) 0;
 }
 
 .points-timeline-error a,
 .points-timeline-empty a {
-  color: var(--color-primary, #2563eb);
+  color: var(--color-primary);
   text-decoration: none;
 }
 

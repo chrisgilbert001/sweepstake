@@ -4,43 +4,7 @@
 }
 
 .odds-entry-form .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
   margin-bottom: var(--space-md);
-}
-
-.odds-entry-form .form-group label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text);
-}
-
-.odds-entry-form .form-input,
-.odds-entry-form .form-select {
-  padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  transition: border-color var(--transition-fast);
-  background: var(--color-bg);
-}
-
-.odds-entry-form .form-input:focus,
-.odds-entry-form .form-select:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(26, 95, 42, 0.1);
-}
-
-.odds-entry-form .form-input.input-error {
-  border-color: var(--color-error);
-}
-
-.odds-entry-form .error-message {
-  color: var(--color-error);
-  font-size: var(--font-size-sm);
-  margin-top: var(--space-xs);
 }
 
 .odds-grid {
@@ -58,7 +22,7 @@
 
 .odds-grid-item label {
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text);
   min-width: 120px;
   flex-shrink: 0;
@@ -69,14 +33,17 @@
   padding: var(--space-xs) var(--space-sm);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
+  font-family: var(--font-family-mono);
   font-size: var(--font-size-sm);
   text-align: center;
+  background: var(--color-bg-card);
+  color: var(--color-text);
 }
 
 .odds-grid-item input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(26, 95, 42, 0.1);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 22%, transparent);
 }
 
 .odds-grid-item input.input-error {
@@ -105,45 +72,24 @@
   margin-top: var(--space-lg);
 }
 
-.odds-entry-form .btn-primary {
-  background-color: var(--color-primary);
-  color: var(--color-text-inverse);
-  border: none;
-  border-radius: var(--radius-md);
-  padding: var(--space-sm) var(--space-lg);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  cursor: pointer;
-  transition: background-color var(--transition-fast);
-  min-height: 44px;
-}
-
-.odds-entry-form .btn-primary:hover:not(:disabled) {
-  background-color: var(--color-primary-light);
-}
-
-.odds-entry-form .btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 .odds-entry-form .feedback-message {
   margin-top: var(--space-md);
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
 }
 
 .odds-entry-form .feedback-success {
-  background: rgba(40, 167, 69, 0.1);
+  background: color-mix(in srgb, var(--color-success) 14%, transparent);
   color: var(--color-success);
-  border: 1px solid var(--color-success);
+  border: 1px solid color-mix(in srgb, var(--color-success) 50%, transparent);
 }
 
 .odds-entry-form .feedback-error {
-  background: rgba(220, 53, 69, 0.1);
+  background: color-mix(in srgb, var(--color-error) 14%, transparent);
   color: var(--color-error);
-  border: 1px solid var(--color-error);
+  border: 1px solid color-mix(in srgb, var(--color-error) 50%, transparent);
 }
 
 .odds-validation-summary {

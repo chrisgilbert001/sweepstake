@@ -38,15 +38,17 @@
 /* Individual group card */
 .group-card {
   background-color: var(--color-bg-card);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
   padding: var(--space-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--elevation-raised);
 }
 
 .group-title {
+  font-family: var(--font-family-display);
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-black);
+  letter-spacing: var(--tracking-tight);
   margin-bottom: var(--space-md);
   color: var(--color-primary);
 }
@@ -136,11 +138,7 @@
 
 /* Owned team highlight */
 .group-row-owned {
-  background-color: rgba(26, 95, 42, 0.06);
-}
-
-[data-theme='dark'] .group-row-owned {
-  background-color: rgba(76, 175, 96, 0.1);
+  background-color: color-mix(in srgb, var(--color-primary) 9%, transparent);
 }
 
 /* Qualification line - thick border between position 2 and 3 */

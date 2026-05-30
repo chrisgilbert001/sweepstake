@@ -105,7 +105,37 @@ function HomePage() {
     return (
       <div className="home-page">
         <section className="home-hero">
-          <span className="home-hero-emoji" aria-hidden="true">⚽🏆</span>
+          <span className="home-hero-mark" aria-hidden="true">
+            <svg viewBox="0 0 64 64" width="76" height="76" role="img">
+              <defs>
+                <linearGradient id="heroGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stopColor="#10b981" />
+                  <stop offset="0.5" stopColor="#34d399" />
+                  <stop offset="1" stopColor="#a3e635" />
+                </linearGradient>
+              </defs>
+              <rect x="2" y="2" width="60" height="60" rx="20" fill="url(#heroGrad)" />
+              <g
+                transform="translate(12.8 12.8) scale(1.6)"
+                fill="none"
+                stroke="#06140f"
+                strokeWidth="1.3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path
+                  d="M12 8.8 15.04 11.01 13.88 14.59 10.12 14.59 8.96 11.01Z"
+                  fill="#06140f"
+                />
+                <path d="M12 8.8V2" />
+                <path d="m15.04 11.01 6.47-2.1" />
+                <path d="m13.88 14.59 4 5.5" />
+                <path d="m10.12 14.59-4 5.5" />
+                <path d="m8.96 11.01-6.47-2.1" />
+              </g>
+            </svg>
+          </span>
           <h1>World Cup Sweepstake</h1>
           <p>
             Create a league with friends, draft teams from the FIFA World Cup via an

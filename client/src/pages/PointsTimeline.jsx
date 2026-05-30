@@ -12,6 +12,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { getPointsHistory } from '../api/pointsHistory.js';
+import { useTheme } from '../context/ThemeContext.jsx';
 import './PointsTimeline.css';
 
 ChartJS.register(
@@ -36,6 +37,7 @@ const PARTICIPANT_COLOURS = [
 
 export default function PointsTimeline() {
   const { slug } = useParams();
+  const { theme } = useTheme();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -117,6 +119,20 @@ export default function PointsTimeline() {
 
   const chartData = { labels, datasets };
 
+  // Read theme-aware colours from CSS variables so the chart is legible in
+  // both the stadium-dark and light themes. `theme` is a dependency so the
+  // chart re-renders when the user toggles.
+  const rootStyles =
+    typeof window !== 'undefined'
+      ? getComputedStyle(document.documentElement)
+      : null;
+  const readVar = (name, fallback) =>
+    (rootStyles && rootStyles.getPropertyValue(name).trim()) || fallback;
+  const textColor = readVar('--color-text', theme === 'dark' ? '#e9f1ec' : '#0f1c16');
+  const mutedColor = readVar('--color-text-muted', '#8fa79b');
+  const gridColor =
+    theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,28,22,0.08)';
+
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -128,10 +144,12 @@ export default function PointsTimeline() {
       title: {
         display: true,
         text: 'Points History',
-        font: { size: 16 },
+        color: textColor,
+        font: { size: 16, family: "'Archivo', sans-serif", weight: '800' },
       },
       legend: {
         position: 'top',
+        labels: { color: textColor },
         onClick: (e, legendItem, legend) => {
           // Default Chart.js legend click toggles dataset visibility
           const index = legendItem.datasetIndex;
@@ -187,13 +205,19 @@ export default function PointsTimeline() {
         title: {
           display: true,
           text: 'Match Day',
+          color: mutedColor,
         },
+        ticks: { color: mutedColor },
+        grid: { color: gridColor },
       },
       y: {
         title: {
           display: true,
           text: 'Cumulative Points',
+          color: mutedColor,
         },
+        ticks: { color: mutedColor },
+        grid: { color: gridColor },
         beginAtZero: true,
       },
     },

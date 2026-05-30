@@ -3,13 +3,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--space-xl) var(--space-md);
+  padding: var(--space-3xl) var(--space-md) var(--space-2xl);
 }
 
+/* ---- Hero ------------------------------------------------------------ */
 .home-hero {
   text-align: center;
-  margin-bottom: var(--space-3xl);
-  max-width: 600px;
+  margin-bottom: var(--space-2xl);
+  max-width: 640px;
 }
 
 .home-hero--compact {
@@ -21,14 +22,38 @@
 }
 
 .home-hero h1 {
-  color: var(--color-primary-dark);
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  line-height: 1.05;
   margin-bottom: var(--space-md);
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
-.home-hero-emoji {
-  font-size: var(--font-size-4xl);
+.home-hero-mark {
+  display: inline-flex;
   margin-bottom: var(--space-md);
-  display: block;
+  filter: drop-shadow(0 10px 26px rgba(16, 185, 129, 0.45));
+  animation: hero-mark-in var(--duration-slow) var(--ease-default) both;
+}
+
+@keyframes hero-mark-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero-mark {
+    animation: none;
+  }
 }
 
 .home-hero p {
@@ -44,12 +69,17 @@
 }
 
 .home-user-email {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-sm);
-  color: var(--color-text-light);
+  color: var(--color-text-muted);
   font-size: var(--font-size-sm);
+  font-family: var(--font-family-mono);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
 }
 
 .home-change-user {
@@ -57,23 +87,26 @@
   border: none;
   color: var(--color-primary);
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
   cursor: pointer;
-  text-decoration: underline;
   padding: 0;
+  min-height: auto;
+  min-width: auto;
 }
 
 .home-change-user:hover {
   color: var(--color-primary-light);
 }
 
-/* Create section (used for email entry and create league) */
+/* ---- Glass entry / create card -------------------------------------- */
 .home-create-section {
   width: 100%;
   max-width: 480px;
   background: var(--color-bg-card);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
   padding: var(--space-xl);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--elevation-prominent);
 }
 
 .home-create-section h2 {
@@ -87,91 +120,15 @@
   gap: var(--space-md);
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
+.home-form .btn-primary {
+  width: 100%;
 }
 
-.form-group label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text);
-}
-
-.form-input {
-  padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  transition: border-color var(--transition-fast);
-  background: var(--color-bg);
-  color: var(--color-text);
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(26, 95, 42, 0.1);
-}
-
-.form-input.input-error {
-  border-color: var(--color-error);
-}
-
-.form-input.input-error:focus {
-  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
-}
-
-.error-message {
-  color: var(--color-error);
-  font-size: var(--font-size-sm);
-  margin-top: var(--space-xs);
-}
-
-.btn-primary {
-  background-color: var(--color-primary);
-  color: var(--color-text-inverse);
-  border: none;
-  border-radius: var(--radius-md);
-  padding: var(--space-sm) var(--space-lg);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  transition: background-color var(--transition-fast);
-  min-height: 44px;
-  cursor: pointer;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: var(--color-primary-light);
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background: none;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-sm) var(--space-lg);
-  font-size: var(--font-size-base);
-  color: var(--color-text);
-  cursor: pointer;
-  min-height: 44px;
-  transition: background-color var(--transition-fast);
-}
-
-.btn-secondary:hover {
-  background: var(--color-bg-muted);
-}
-
-/* Leagues section */
+/* ---- Leagues list ---------------------------------------------------- */
 .home-leagues-section {
   width: 100%;
   max-width: 480px;
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-lg);
 }
 
 .home-leagues-loading,
@@ -189,6 +146,9 @@
   text-align: center;
   padding: var(--space-xl);
   color: var(--color-text-light);
+  background: var(--glass-bg);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--card-radius);
 }
 
 .home-leagues-list {
@@ -198,22 +158,47 @@
 }
 
 .home-league-card {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: var(--space-md) var(--space-lg);
   background: var(--color-bg-card);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   text-decoration: none;
   color: inherit;
-  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+  overflow: hidden;
+  transition: box-shadow var(--duration-normal) var(--ease-default),
+              transform var(--duration-normal) var(--ease-default),
+              border-color var(--duration-normal) var(--ease-default);
+}
+
+/* Accent rail that lights up on hover */
+.home-league-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--gradient-accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--duration-normal) var(--ease-default);
 }
 
 .home-league-card:hover,
 .home-league-card:focus-visible {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
+  box-shadow: var(--elevation-prominent);
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-primary) 35%, var(--glass-border));
+}
+
+.home-league-card:hover::before,
+.home-league-card:focus-visible::before {
+  transform: scaleY(1);
 }
 
 .home-league-card__info {
@@ -223,23 +208,28 @@
 
 .home-league-card__name {
   margin: 0 0 2px;
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
 }
 
 .home-league-card__participant {
   margin: 0;
   font-size: var(--font-size-sm);
-  color: var(--color-text-light);
+  color: var(--color-text-muted);
 }
 
 .home-league-card__arrow {
-  font-size: var(--font-size-lg);
-  color: var(--color-text-light);
+  font-size: var(--font-size-xl);
+  color: var(--color-primary);
   margin-left: var(--space-md);
+  transition: transform var(--duration-normal) var(--ease-default);
 }
 
-/* Actions section */
+.home-league-card:hover .home-league-card__arrow {
+  transform: translateX(4px);
+}
+
+/* ---- Actions --------------------------------------------------------- */
 .home-actions-section {
   width: 100%;
   max-width: 480px;
@@ -251,9 +241,10 @@
 
 .home-create-form-card {
   background: var(--color-bg-card);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
   padding: var(--space-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--elevation-prominent);
 }
 
 .home-create-form-card h3 {
@@ -270,15 +261,9 @@
   flex: 1;
 }
 
-.form-hint {
-  color: var(--color-text-light);
-  font-size: var(--font-size-xs);
-  margin-top: var(--space-xs);
-}
-
 @media (max-width: 480px) {
   .home-page {
-    padding: var(--space-lg) var(--space-sm);
+    padding: var(--space-xl) var(--space-sm);
   }
 
   .home-create-section {
@@ -287,5 +272,16 @@
 
   .home-hero {
     margin-bottom: var(--space-xl);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-league-card:hover,
+  .home-league-card:focus-visible {
+    transform: none;
+  }
+  .home-league-card__arrow,
+  .home-league-card::before {
+    transition: none;
   }
 }

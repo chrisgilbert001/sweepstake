@@ -6,15 +6,20 @@
 }
 
 .admin-panel h1 {
-  color: var(--color-primary-dark);
   margin-bottom: var(--space-lg);
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .admin-token-section {
   background: var(--color-bg-card);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
   padding: var(--space-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--elevation-raised);
   margin-bottom: var(--space-xl);
 }
 
@@ -40,7 +45,7 @@
 .admin-token-input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(26, 95, 42, 0.1);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 22%, transparent);
 }
 
 .admin-tabs {
@@ -71,15 +76,20 @@
 
 .admin-tab.active {
   color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
-  font-weight: var(--font-weight-semibold);
+  border-bottom-color: transparent;
+  font-weight: var(--font-weight-bold);
+  background-image: var(--gradient-accent);
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: 100% 2px;
 }
 
 .admin-tab-content {
   background: var(--color-bg-card);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
   padding: var(--space-xl);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--elevation-raised);
 }
 
 .admin-fixtures-list {
@@ -106,6 +116,7 @@
   align-items: center;
   padding: var(--space-sm) var(--space-md);
   background: var(--color-bg-muted);
+  border: 1px solid var(--color-border-light);
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
 }

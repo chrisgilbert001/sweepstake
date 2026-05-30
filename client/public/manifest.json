@@ -4,8 +4,8 @@
   "description": "World Cup Sweepstake league tracker",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1a5f2a",
+  "background_color": "#0b1512",
+  "theme_color": "#0b1512",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",

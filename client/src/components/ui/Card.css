@@ -1,8 +1,9 @@
-/* Card base styles */
+/* Card base styles — frosted glass surface */
 .card {
+  position: relative;
   background: var(--color-bg-card);
   border-radius: var(--card-radius);
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--glass-border);
   padding: var(--card-padding);
 }
 
@@ -22,12 +23,14 @@
 /* Hover effect */
 .card--hoverable {
   transition: transform var(--duration-normal) var(--ease-default),
-              box-shadow var(--duration-normal) var(--ease-default);
+              box-shadow var(--duration-normal) var(--ease-default),
+              border-color var(--duration-normal) var(--ease-default);
   cursor: pointer;
 }
 
 .card--hoverable:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--color-primary) 30%, var(--glass-border));
 }
 
 .card--hoverable.card--flat:hover {

@@ -49,20 +49,23 @@
 }
 
 .bracket-round-title {
-  font-family: var(--font-family);
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
 }
 
 .bracket-team-name {
   font-family: var(--font-family);
 }
 
-/* Owner highlight background for dark mode */
+/* Owner highlight background (consumed by the SVG bracket) */
 :root {
-  --bracket-owner-bg: #e8f5e9;
+  --bracket-owner-bg: #d8f0e3;
 }
 
 [data-theme='dark'] {
-  --bracket-owner-bg: #1b3a1f;
+  --bracket-owner-bg: #14322a;
 }
 
 /* Loading and error states */

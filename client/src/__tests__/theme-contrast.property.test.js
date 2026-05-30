@@ -54,15 +54,15 @@ function contrastRatio(color1, color2) {
  */
 const lightThemePairs = [
   // Primary text on all backgrounds
-  { textToken: '--color-text', textColor: '#212529', bgToken: '--color-bg', bgColor: '#f8f9fa' },
-  { textToken: '--color-text', textColor: '#212529', bgToken: '--color-bg-card', bgColor: '#ffffff' },
-  { textToken: '--color-text', textColor: '#212529', bgToken: '--color-bg-muted', bgColor: '#e9ecef' },
+  { textToken: '--color-text', textColor: '#0f1c16', bgToken: '--color-bg', bgColor: '#eef3ef' },
+  { textToken: '--color-text', textColor: '#0f1c16', bgToken: '--color-bg-card', bgColor: '#ffffff' },
+  { textToken: '--color-text', textColor: '#0f1c16', bgToken: '--color-bg-muted', bgColor: '#e1e9e3' },
   // Light text on primary backgrounds
-  { textToken: '--color-text-light', textColor: '#495057', bgToken: '--color-bg', bgColor: '#f8f9fa' },
-  { textToken: '--color-text-light', textColor: '#495057', bgToken: '--color-bg-card', bgColor: '#ffffff' },
+  { textToken: '--color-text-light', textColor: '#3d4f46', bgToken: '--color-bg', bgColor: '#eef3ef' },
+  { textToken: '--color-text-light', textColor: '#3d4f46', bgToken: '--color-bg-card', bgColor: '#ffffff' },
   // Muted text on primary backgrounds (not on muted backgrounds)
-  { textToken: '--color-text-muted', textColor: '#656d75', bgToken: '--color-bg', bgColor: '#f8f9fa' },
-  { textToken: '--color-text-muted', textColor: '#656d75', bgToken: '--color-bg-card', bgColor: '#ffffff' },
+  { textToken: '--color-text-muted', textColor: '#51625a', bgToken: '--color-bg', bgColor: '#eef3ef' },
+  { textToken: '--color-text-muted', textColor: '#51625a', bgToken: '--color-bg-card', bgColor: '#ffffff' },
 ];
 
 /**
@@ -71,15 +71,15 @@ const lightThemePairs = [
  */
 const darkThemePairs = [
   // Primary text on all backgrounds
-  { textToken: '--color-text', textColor: '#e4e4e7', bgToken: '--color-bg', bgColor: '#121218' },
-  { textToken: '--color-text', textColor: '#e4e4e7', bgToken: '--color-bg-card', bgColor: '#1e1e26' },
-  { textToken: '--color-text', textColor: '#e4e4e7', bgToken: '--color-bg-muted', bgColor: '#2a2a35' },
+  { textToken: '--color-text', textColor: '#e9f1ec', bgToken: '--color-bg', bgColor: '#0b1512' },
+  { textToken: '--color-text', textColor: '#e9f1ec', bgToken: '--color-bg-card', bgColor: '#111d18' },
+  { textToken: '--color-text', textColor: '#e9f1ec', bgToken: '--color-bg-muted', bgColor: '#1a2a23' },
   // Light text on primary backgrounds
-  { textToken: '--color-text-light', textColor: '#b4b4bb', bgToken: '--color-bg', bgColor: '#121218' },
-  { textToken: '--color-text-light', textColor: '#b4b4bb', bgToken: '--color-bg-card', bgColor: '#1e1e26' },
+  { textToken: '--color-text-light', textColor: '#aebdb5', bgToken: '--color-bg', bgColor: '#0b1512' },
+  { textToken: '--color-text-light', textColor: '#aebdb5', bgToken: '--color-bg-card', bgColor: '#111d18' },
   // Muted text on primary backgrounds
-  { textToken: '--color-text-muted', textColor: '#9494a0', bgToken: '--color-bg', bgColor: '#121218' },
-  { textToken: '--color-text-muted', textColor: '#9494a0', bgToken: '--color-bg-card', bgColor: '#1e1e26' },
+  { textToken: '--color-text-muted', textColor: '#8fa79b', bgToken: '--color-bg', bgColor: '#0b1512' },
+  { textToken: '--color-text-muted', textColor: '#8fa79b', bgToken: '--color-bg-card', bgColor: '#111d18' },
 ];
 
 /**
@@ -117,13 +117,13 @@ describe('Feature: ui-modernization, Property 4: Theme color contrast WCAG AA co
   it('should have >= 3:1 contrast ratio for primary/secondary colors on backgrounds (large text)', () => {
     const accentOnBgPairs = [
       // Light theme accent colors on backgrounds
-      { textColor: '#1a5f2a', bgColor: '#f8f9fa', label: 'light: primary on bg' },
-      { textColor: '#1a5f2a', bgColor: '#ffffff', label: 'light: primary on card' },
+      { textColor: '#047857', bgColor: '#eef3ef', label: 'light: primary on bg' },
+      { textColor: '#047857', bgColor: '#ffffff', label: 'light: primary on card' },
       // Dark theme accent colors on backgrounds
-      { textColor: '#4caf60', bgColor: '#121218', label: 'dark: primary on bg' },
-      { textColor: '#4caf60', bgColor: '#1e1e26', label: 'dark: primary on card' },
-      { textColor: '#ffd84d', bgColor: '#121218', label: 'dark: secondary on bg' },
-      { textColor: '#ffd84d', bgColor: '#1e1e26', label: 'dark: secondary on card' },
+      { textColor: '#34d399', bgColor: '#0b1512', label: 'dark: primary on bg' },
+      { textColor: '#34d399', bgColor: '#111d18', label: 'dark: primary on card' },
+      { textColor: '#bef264', bgColor: '#0b1512', label: 'dark: secondary on bg' },
+      { textColor: '#bef264', bgColor: '#111d18', label: 'dark: secondary on card' },
     ];
 
     fc.assert(

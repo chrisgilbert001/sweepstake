@@ -40,22 +40,46 @@
 }
 
 .my-leagues-card {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-3, 1.5rem);
-  background: var(--color-surface, #fff);
-  border-radius: var(--radius-md, 8px);
-  box-shadow: var(--elevation-raised, 0 2px 4px rgba(0, 0, 0, 0.1));
+  padding: var(--space-4) var(--space-4);
+  background: var(--color-bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   text-decoration: none;
   color: inherit;
-  transition: box-shadow var(--transition-fast, 150ms), transform var(--transition-fast, 150ms);
+  overflow: hidden;
+  transition: box-shadow var(--duration-normal) var(--ease-default),
+              transform var(--duration-normal) var(--ease-default),
+              border-color var(--duration-normal) var(--ease-default);
+}
+
+.my-leagues-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--gradient-accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--duration-normal) var(--ease-default);
 }
 
 .my-leagues-card:hover,
 .my-leagues-card:focus-visible {
-  box-shadow: var(--elevation-prominent, 0 4px 12px rgba(0, 0, 0, 0.15));
-  transform: translateY(-1px);
+  box-shadow: var(--elevation-prominent);
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-primary) 35%, var(--glass-border));
+}
+
+.my-leagues-card:hover::before,
+.my-leagues-card:focus-visible::before {
+  transform: scaleY(1);
 }
 
 .my-leagues-card__info {
@@ -76,10 +100,22 @@
 
 .my-leagues-card__arrow {
   font-size: var(--font-size-xl, 1.25rem);
-  color: var(--color-text-muted, #666);
+  color: var(--color-primary);
   margin-left: var(--space-2, 0.75rem);
+  transition: transform var(--duration-normal) var(--ease-default);
 }
 
-[data-theme='dark'] .my-leagues-card {
-  background: var(--color-surface, #1e1e1e);
+.my-leagues-card:hover .my-leagues-card__arrow {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .my-leagues-card:hover,
+  .my-leagues-card:focus-visible {
+    transform: none;
+  }
+  .my-leagues-card::before,
+  .my-leagues-card__arrow {
+    transition: none;
+  }
 }

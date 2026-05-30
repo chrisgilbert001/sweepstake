@@ -10,44 +10,7 @@
 }
 
 .match-result-form .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
   margin-bottom: var(--space-md);
-}
-
-.match-result-form .form-group label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text);
-}
-
-.match-result-form .form-input,
-.match-result-form .form-select {
-  padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  transition: border-color var(--transition-fast);
-  background: var(--color-bg);
-}
-
-.match-result-form .form-input:focus,
-.match-result-form .form-select:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(26, 95, 42, 0.1);
-}
-
-.match-result-form .form-input.input-error,
-.match-result-form .form-select.input-error {
-  border-color: var(--color-error);
-}
-
-.match-result-form .error-message {
-  color: var(--color-error);
-  font-size: var(--font-size-sm);
-  margin-top: var(--space-xs);
 }
 
 .match-result-form .form-actions {
@@ -56,49 +19,29 @@
   margin-top: var(--space-lg);
 }
 
-.match-result-form .btn-primary {
-  background-color: var(--color-primary);
-  color: var(--color-text-inverse);
-  border: none;
-  border-radius: var(--radius-md);
-  padding: var(--space-sm) var(--space-lg);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  cursor: pointer;
-  transition: background-color var(--transition-fast);
-  min-height: 44px;
-}
-
-.match-result-form .btn-primary:hover:not(:disabled) {
-  background-color: var(--color-primary-light);
-}
-
-.match-result-form .btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 .match-result-form .feedback-message {
   margin-top: var(--space-md);
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
 }
 
 .match-result-form .feedback-success {
-  background: rgba(40, 167, 69, 0.1);
+  background: color-mix(in srgb, var(--color-success) 14%, transparent);
   color: var(--color-success);
-  border: 1px solid var(--color-success);
+  border: 1px solid color-mix(in srgb, var(--color-success) 50%, transparent);
 }
 
 .match-result-form .feedback-error {
-  background: rgba(220, 53, 69, 0.1);
+  background: color-mix(in srgb, var(--color-error) 14%, transparent);
   color: var(--color-error);
-  border: 1px solid var(--color-error);
+  border: 1px solid color-mix(in srgb, var(--color-error) 50%, transparent);
 }
 
 .match-result-form .penalty-section {
   background: var(--color-bg-muted);
+  border: 1px solid var(--color-border-light);
   padding: var(--space-md);
   border-radius: var(--radius-md);
   margin-bottom: var(--space-md);

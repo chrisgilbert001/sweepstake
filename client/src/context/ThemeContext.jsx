@@ -17,16 +17,17 @@ function getInitialTheme() {
     // localStorage may be unavailable (private browsing, etc.)
   }
 
-  // Check system preference
+  // Check system preference — only an explicit "light" preference opts out of
+  // the signature stadium-dark theme.
   if (typeof window !== 'undefined' && window.matchMedia) {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    if (prefersDark.matches) {
-      return 'dark';
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)');
+    if (prefersLight.matches) {
+      return 'light';
     }
   }
 
-  // Default to light
-  return 'light';
+  // Default to the stadium-dark theme
+  return 'dark';
 }
 
 export function ThemeProvider({ children }) {

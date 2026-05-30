@@ -27,7 +27,7 @@ export async function calculatePoints(participantId, leagueSlug) {
 
   const participantTeams = Object.values(allocations).flat();
   const data = await readFile(RESULTS_FILE);
-  const results = data.results;
+  const results = data.results.filter(r => r.stage !== 'Third Place');
 
   let points = 0;
   let wins = 0;
