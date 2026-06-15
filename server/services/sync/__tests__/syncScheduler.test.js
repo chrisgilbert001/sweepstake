@@ -33,14 +33,14 @@ describe('syncScheduler', () => {
   });
 
   describe('getValidatedInterval', () => {
-    it('returns default 3600000ms when SYNC_INTERVAL_MS is not set', () => {
+    it('returns default 60000ms when SYNC_INTERVAL_MS is not set', () => {
       delete process.env.SYNC_INTERVAL_MS;
-      expect(getValidatedInterval()).toBe(3600000);
+      expect(getValidatedInterval()).toBe(60000);
     });
 
     it('returns default when SYNC_INTERVAL_MS is empty string', () => {
       process.env.SYNC_INTERVAL_MS = '';
-      expect(getValidatedInterval()).toBe(3600000);
+      expect(getValidatedInterval()).toBe(60000);
     });
 
     it('accepts valid integer within range (60000)', () => {
@@ -60,42 +60,42 @@ describe('syncScheduler', () => {
 
     it('falls back to default for value below minimum (59999)', () => {
       process.env.SYNC_INTERVAL_MS = '59999';
-      expect(getValidatedInterval()).toBe(3600000);
+      expect(getValidatedInterval()).toBe(60000);
     });
 
     it('falls back to default for value above maximum (86400001)', () => {
       process.env.SYNC_INTERVAL_MS = '86400001';
-      expect(getValidatedInterval()).toBe(3600000);
+      expect(getValidatedInterval()).toBe(60000);
     });
 
     it('falls back to default for non-integer (3.14)', () => {
       process.env.SYNC_INTERVAL_MS = '3.14';
-      expect(getValidatedInterval()).toBe(3600000);
+      expect(getValidatedInterval()).toBe(60000);
     });
 
     it('falls back to default for non-numeric string', () => {
       process.env.SYNC_INTERVAL_MS = 'abc';
-      expect(getValidatedInterval()).toBe(3600000);
+      expect(getValidatedInterval()).toBe(60000);
     });
 
     it('falls back to default for negative value', () => {
       process.env.SYNC_INTERVAL_MS = '-1000';
-      expect(getValidatedInterval()).toBe(3600000);
+      expect(getValidatedInterval()).toBe(60000);
     });
 
     it('falls back to default for zero', () => {
       process.env.SYNC_INTERVAL_MS = '0';
-      expect(getValidatedInterval()).toBe(3600000);
+      expect(getValidatedInterval()).toBe(60000);
     });
 
     it('falls back to default for NaN', () => {
       process.env.SYNC_INTERVAL_MS = 'NaN';
-      expect(getValidatedInterval()).toBe(3600000);
+      expect(getValidatedInterval()).toBe(60000);
     });
 
     it('falls back to default for Infinity', () => {
       process.env.SYNC_INTERVAL_MS = 'Infinity';
-      expect(getValidatedInterval()).toBe(3600000);
+      expect(getValidatedInterval()).toBe(60000);
     });
   });
 
@@ -285,9 +285,7 @@ describe('syncScheduler', () => {
   });
 
   describe('overlap prevention', () => {
-    it('skips scheduled sync if previous sync is still in progress', async () => {
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
+    it('does not start a new scheduled sync until the previous one completes', async () => {
       let resolveSync;
       executeSyncCycle.mockImplementation(
         () => new Promise((resolve) => { resolveSync = resolve; })
@@ -295,39 +293,59 @@ describe('syncScheduler', () => {
 
       startScheduler({ initialDelayMs: 1000, intervalMs: 2000 });
 
-      // Trigger first sync
+      // Trigger first sync — it hangs (does not resolve yet)
       await vi.advanceTimersByTimeAsync(1000);
       expect(executeSyncCycle).toHaveBeenCalledTimes(1);
 
-      // Advance to next interval — sync should be skipped
+      // The next sync is only scheduled after the current one finishes, so
+      // advancing past the interval while the sync is in flight does nothing.
       await vi.advanceTimersByTimeAsync(2000);
       expect(executeSyncCycle).toHaveBeenCalledTimes(1);
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Skipping scheduled sync')
-      );
 
-      // Resolve the first sync
+      // Resolve the first sync; the next sync is now scheduled.
       resolveSync({
         outcome: 'success',
         timestamp: new Date().toISOString(),
         error: null,
-        stats: { fixtures: 0, results: 0, standings: false },
+        stats: { fixtures: 0, results: 0, live: 0, standings: false },
       });
-
       await vi.advanceTimersByTimeAsync(0);
 
-      // Next interval should execute normally
       executeSyncCycle.mockResolvedValue({
         outcome: 'success',
         timestamp: new Date().toISOString(),
         error: null,
-        stats: { fixtures: 0, results: 0, standings: false },
+        stats: { fixtures: 0, results: 0, live: 0, standings: false },
       });
 
+      // After the base interval elapses, the next sync runs.
       await vi.advanceTimersByTimeAsync(2000);
       expect(executeSyncCycle).toHaveBeenCalledTimes(2);
+    });
+  });
 
-      warnSpy.mockRestore();
+  describe('fixed cadence', () => {
+    it('keeps the configured interval regardless of live matches', async () => {
+      // A live match is reported, but the interval must not change.
+      executeSyncCycle.mockResolvedValue({
+        outcome: 'success',
+        timestamp: new Date().toISOString(),
+        error: null,
+        stats: { fixtures: 0, results: 1, live: 1, standings: false },
+      });
+
+      startScheduler({ initialDelayMs: 1000, intervalMs: 120000 });
+
+      await vi.advanceTimersByTimeAsync(1000);
+      expect(executeSyncCycle).toHaveBeenCalledTimes(1);
+
+      // No early sync before the configured interval, even with a live match.
+      await vi.advanceTimersByTimeAsync(60000);
+      expect(executeSyncCycle).toHaveBeenCalledTimes(1);
+
+      // The configured interval (120s total) triggers the next sync.
+      await vi.advanceTimersByTimeAsync(60000);
+      expect(executeSyncCycle).toHaveBeenCalledTimes(2);
     });
   });
 });

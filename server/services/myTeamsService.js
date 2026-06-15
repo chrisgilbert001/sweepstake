@@ -106,6 +106,9 @@ export function calculateTeamStats(teamId, results) {
   let goalsConceded = 0;
 
   for (const result of results) {
+    // The third-place playoff does not count toward sweepstake scoring.
+    // Accept both the API-sync name and the manual-entry name.
+    if (result.stage === 'Third Place' || result.stage === 'Third-place playoff') continue;
     if (result.homeTeam === teamId) {
       goalsScored += result.homeScore;
       goalsConceded += result.awayScore;

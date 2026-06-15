@@ -7,8 +7,15 @@
 
 import { executeSyncCycle } from './syncService.js';
 
-/** Default interval between syncs: 1 hour */
-const DEFAULT_INTERVAL_MS = 3600000;
+/**
+ * Default interval between syncs: 1 minute.
+ *
+ * The upstream API allows 10 calls/min and a sync cycle makes at most 2 calls
+ * (matches always, standings only during the group stage), so polling every
+ * minute stays well within budget while picking up live scores in near real
+ * time without any live-match detection logic.
+ */
+const DEFAULT_INTERVAL_MS = 60000;
 
 /** Default initial delay before first sync: 5 seconds */
 const DEFAULT_INITIAL_DELAY_MS = 5000;
@@ -22,8 +29,11 @@ const MAX_INTERVAL_MS = 86400000;
 /** Timer reference for the initial delay timeout */
 let initialTimer = null;
 
-/** Timer reference for the repeating interval */
+/** Timer reference for the next scheduled sync */
 let intervalTimer = null;
+
+/** Interval between syncs, captured when the scheduler starts */
+let intervalMs = DEFAULT_INTERVAL_MS;
 
 /** Whether a sync is currently in progress */
 let syncInProgress = false;
@@ -84,8 +94,11 @@ async function executeWithOverlapProtection() {
   syncInProgress = true;
   currentSyncPromise = executeSyncCycle()
     .then((result) => {
+      const liveSuffix = (result?.stats?.live || 0) > 0
+        ? ` (${result.stats.live} live match(es))`
+        : '';
       console.log(
-        `[SyncScheduler] Sync cycle completed: ${result.outcome}`
+        `[SyncScheduler] Sync cycle completed: ${result.outcome}${liveSuffix}`
       );
     })
     .catch((error) => {
@@ -102,10 +115,25 @@ async function executeWithOverlapProtection() {
 }
 
 /**
+ * Runs one sync cycle and schedules the next one a fixed interval later.
+ * Self-scheduling (rather than setInterval) guarantees the gap is measured
+ * from the end of one cycle, so a slow cycle can never overlap the next.
+ *
+ * @returns {Promise<void>}
+ */
+async function runCycleAndReschedule() {
+  await executeWithOverlapProtection();
+
+  if (schedulerRunning) {
+    intervalTimer = setTimeout(runCycleAndReschedule, intervalMs);
+  }
+}
+
+/**
  * Starts the sync scheduler.
  *
  * Schedules the first sync after an initial delay (default 5s),
- * then repeats at the configured interval (default 1 hour).
+ * then repeats at the configured interval (default 1 minute).
  *
  * @param {object} [options]
  * @param {number} [options.intervalMs] - Interval between syncs (overrides env var)
@@ -117,7 +145,7 @@ export function startScheduler(options = {}) {
     return;
   }
 
-  const intervalMs = options.intervalMs ?? getValidatedInterval();
+  intervalMs = options.intervalMs ?? getValidatedInterval();
   const initialDelayMs = options.initialDelayMs ?? DEFAULT_INITIAL_DELAY_MS;
 
   schedulerRunning = true;
@@ -127,15 +155,11 @@ export function startScheduler(options = {}) {
     `interval ${intervalMs}ms`
   );
 
-  // Schedule the first sync after the initial delay
+  // Schedule the first sync after the initial delay, then self-schedule
+  // each subsequent sync a fixed interval after the previous one finishes.
   initialTimer = setTimeout(() => {
     initialTimer = null;
-    executeWithOverlapProtection();
-
-    // Set up the repeating interval
-    intervalTimer = setInterval(() => {
-      executeWithOverlapProtection();
-    }, intervalMs);
+    runCycleAndReschedule();
   }, initialDelayMs);
 }
 
@@ -157,9 +181,9 @@ export async function stopScheduler() {
     initialTimer = null;
   }
 
-  // Cancel the repeating interval
+  // Cancel the next scheduled sync
   if (intervalTimer !== null) {
-    clearInterval(intervalTimer);
+    clearTimeout(intervalTimer);
     intervalTimer = null;
   }
 

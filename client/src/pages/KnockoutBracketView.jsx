@@ -27,6 +27,13 @@ export default function KnockoutBracketView() {
     fetchData();
   }, [fetchData]);
 
+  // Poll the bracket so it reflects live results and newly-resolved matchups
+  // without a manual refresh, matching the rest of the league views.
+  useEffect(() => {
+    const interval = setInterval(fetchData, 30000);
+    return () => clearInterval(interval);
+  }, [fetchData]);
+
   // Build a map of teamId -> participant name for ownership highlighting
   function getOwnerMap() {
     const ownerMap = {};

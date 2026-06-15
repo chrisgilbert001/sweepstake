@@ -62,6 +62,69 @@ const KNOCKOUT_ROUNDS = [
 ];
 
 /**
+ * Official FIFA 2026 match numbers in bracket depth-first order per round.
+ * Ordering a round's fixtures into this sequence lets the renderer's pairwise
+ * merge (slots 2k and 2k+1 feed slot k of the next round) reconstruct the real
+ * tournament tree all the way to the final. Third-place playoff (match 103) is
+ * intentionally excluded — it is not part of the bracket tree.
+ * Source: en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage
+ */
+const BRACKET_SLOT_ORDER = {
+  'Round of 32': [74, 77, 73, 75, 83, 84, 81, 82, 76, 78, 79, 80, 86, 88, 85, 87],
+  'Round of 16': [89, 90, 93, 94, 91, 92, 95, 96],
+  'Quarter-finals': [97, 98, 99, 100],
+  'Semi-finals': [101, 102],
+  'Final': [104],
+};
+
+/** Official FIFA match number of the first match in each knockout round. */
+const ROUND_BASE_MATCH_NUMBER = {
+  'Round of 32': 73,
+  'Round of 16': 89,
+  'Quarter-finals': 97,
+  'Semi-finals': 101,
+  'Final': 104,
+};
+
+/**
+ * Order a round's fixtures into bracket depth-first slot order (mutates in place).
+ *
+ * The API does not expose the official FIFA match number, but football-data.org
+ * assigns match ids in schedule order, so sorting by apiMatchId recovers the
+ * official match sequence within a round. Each fixture's official number is then
+ * `base + rank`, and BRACKET_SLOT_ORDER maps that number to its bracket slot.
+ *
+ * Only applied when the full round is present and every fixture has an
+ * apiMatchId. Otherwise (partial data, or manually-entered fixtures with no
+ * apiMatchId) it falls back to chronological order, the previous behaviour.
+ *
+ * @param {string} roundName
+ * @param {Array<object>} roundFixtures
+ */
+function orderRoundFixtures(roundName, roundFixtures) {
+  const slotOrder = BRACKET_SLOT_ORDER[roundName];
+  const base = ROUND_BASE_MATCH_NUMBER[roundName];
+  const fullSet = slotOrder && roundFixtures.length === slotOrder.length;
+  const allHaveApiId = roundFixtures.every((f) => f.apiMatchId != null);
+
+  if (fullSet && allHaveApiId) {
+    const byOfficialNumber = new Map();
+    [...roundFixtures]
+      .sort((a, b) => a.apiMatchId - b.apiMatchId)
+      .forEach((fixture, rank) => byOfficialNumber.set(base + rank, fixture));
+
+    const ordered = slotOrder.map((num) => byOfficialNumber.get(num));
+    if (ordered.every(Boolean)) {
+      roundFixtures.splice(0, roundFixtures.length, ...ordered);
+      return;
+    }
+  }
+
+  // Fallback: chronological order.
+  roundFixtures.sort((a, b) => new Date(a.date) - new Date(b.date));
+}
+
+/**
  * Determine the winner of a knockout fixture given its result.
  * - If one team scored more goals, they win.
  * - If scores are equal and a penalty shootout was played, the shootout winner wins.
@@ -103,15 +166,19 @@ export async function getBracketData() {
   const fixtures = fixturesData.fixtures || [];
   const results = resultsData.results || [];
 
-  // Build a map of fixtureId -> result for quick lookup
+  // Build a map of fixtureId -> result for quick lookup.
+  // Live (in-progress) results are provisional: a match leading at halftime
+  // must not be shown as won or advance its team into the next round. Only
+  // final results determine winners and bracket progression.
   const resultByFixtureId = new Map();
   for (const result of results) {
+    if (result.status === 'live') continue;
     if (result.fixtureId) {
       resultByFixtureId.set(result.fixtureId, result);
     }
   }
 
-  // Group knockout fixtures by round, sorted by date within each round
+  // Group knockout fixtures by round
   const fixturesByRound = new Map();
   for (const round of KNOCKOUT_ROUNDS) {
     fixturesByRound.set(round, []);
@@ -123,9 +190,10 @@ export async function getBracketData() {
     }
   }
 
-  // Sort fixtures within each round by date ascending
-  for (const [, roundFixtures] of fixturesByRound) {
-    roundFixtures.sort((a, b) => new Date(a.date) - new Date(b.date));
+  // Order each round into bracket depth-first slot order so the renderer
+  // reconstructs the real tournament tree (falls back to date order).
+  for (const [roundName, roundFixtures] of fixturesByRound) {
+    orderRoundFixtures(roundName, roundFixtures);
   }
 
   // Generate placeholder fixture slots for rounds that are empty when template is available
@@ -198,12 +266,20 @@ export async function getBracketData() {
         if (nextFixtureIndex < nextRound.fixtures.length) {
           const nextFixture = nextRound.fixtures[nextFixtureIndex];
 
+          // Only fill a slot the API hasn't already resolved. When the real
+          // next-round fixture exists with actual teams, that data is
+          // authoritative; propagation is a fallback for undetermined slots
+          // only, so it never overwrites a known matchup with a guess.
           if (fixtureIndex % 2 === 0) {
             // Even-indexed fixture winner goes to homeTeam of next fixture
-            nextFixture.homeTeam = fixture.winner;
+            if (nextFixture.homeTeam === 'TBD') {
+              nextFixture.homeTeam = fixture.winner;
+            }
           } else {
             // Odd-indexed fixture winner goes to awayTeam of next fixture
-            nextFixture.awayTeam = fixture.winner;
+            if (nextFixture.awayTeam === 'TBD') {
+              nextFixture.awayTeam = fixture.winner;
+            }
           }
         }
       }

@@ -42,7 +42,8 @@ function getSundayEndOfWeekUTC(dateStr) {
 
 /**
  * Enrich fixtures with status information based on results.
- * If a result exists for a fixture, mark it as completed and include the score.
+ * If a result exists for a fixture, include the score and reflect whether the
+ * match is in progress (live) or completed (final).
  * @param {Array} fixtures - Array of fixture objects
  * @param {Array} results - Array of result objects
  * @returns {Array} Enriched fixture objects with status info
@@ -58,9 +59,11 @@ function enrichFixturesWithStatus(fixtures, results) {
   return fixtures.map(fixture => {
     const result = resultsByFixtureId.get(fixture.id);
     if (result) {
+      const isLive = result.status === 'live';
       return {
         ...fixture,
-        status: 'completed',
+        status: isLive ? 'in_progress' : 'completed',
+        live: isLive,
         homeScore: result.homeScore,
         awayScore: result.awayScore,
         penaltyShootout: result.penaltyShootout || null
@@ -68,7 +71,8 @@ function enrichFixturesWithStatus(fixtures, results) {
     }
     return {
       ...fixture,
-      status: 'scheduled'
+      status: 'scheduled',
+      live: false
     };
   });
 }

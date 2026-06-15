@@ -110,6 +110,33 @@
   }
 }
 
+/* Live (in-progress) match styling */
+.fixture-live {
+  border-color: color-mix(in srgb, var(--color-error) 45%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-error) 35%, transparent);
+}
+
+.fixture-live .fixture-stage {
+  color: var(--color-error);
+}
+
+.fixture-live-badge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background-color: color-mix(in srgb, var(--color-error) 20%, transparent);
+  color: var(--color-error);
+  border: 1px solid color-mix(in srgb, var(--color-error) 45%, transparent);
+  animation: pulse 2s infinite;
+}
+
+.score-display.score-live {
+  color: var(--color-error);
+}
+
 /* Loading and error states */
 .matchday-loading,
 .matchday-error {

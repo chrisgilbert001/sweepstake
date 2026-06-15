@@ -18,6 +18,9 @@ const VALID_GROUP_NAMES = new Set([
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 ]);
 
+/** API statuses that represent a match currently in progress */
+const LIVE_API_STATUSES = new Set(['LIVE', 'IN_PLAY', 'PAUSED']);
+
 /**
  * Executes a full sync cycle: fixtures → results → standings.
  *
@@ -27,13 +30,13 @@ const VALID_GROUP_NAMES = new Set([
  * @property {'success'|'failure'} outcome
  * @property {string} timestamp - ISO 8601 UTC
  * @property {string|null} error - Error details on failure
- * @property {{ fixtures: number, results: number, standings: boolean }} stats
+ * @property {{ fixtures: number, results: number, live: number, standings: boolean }} stats
  */
 export async function executeSyncCycle() {
   const timestamp = new Date().toISOString();
 
   try {
-    const stats = { fixtures: 0, results: 0, standings: false };
+    const stats = { fixtures: 0, results: 0, live: 0, standings: false };
 
     // Step 1: Fetch matches from the API
     const matchData = await fetchFromApi('/v4/competitions/WC/matches');
@@ -42,8 +45,10 @@ export async function executeSyncCycle() {
     // Step 2: Sync fixtures
     stats.fixtures = await syncFixtures(apiMatches);
 
-    // Step 3: Sync results for FINISHED matches
-    stats.results = await syncResults(apiMatches);
+    // Step 3: Sync results for FINISHED and in-progress matches
+    const resultStats = await syncResults(apiMatches);
+    stats.results = resultStats.results;
+    stats.live = resultStats.live;
 
     // Step 4: Sync group standings (if group stage is still active)
     stats.standings = await syncGroupStandings();
@@ -67,7 +72,7 @@ export async function executeSyncCycle() {
       outcome: 'failure',
       timestamp,
       error: errorMessage,
-      stats: { fixtures: 0, results: 0, standings: false },
+      stats: { fixtures: 0, results: 0, live: 0, standings: false },
     };
 
     // Write sync status after failed cycle
@@ -96,6 +101,7 @@ async function writeSyncStatus(syncResult) {
       stats: {
         fixturesUpdated: syncResult.stats.fixtures,
         resultsCreated: syncResult.stats.results,
+        liveUpdated: syncResult.stats.live,
         standingsUpdated: syncResult.stats.standings,
       },
     },
@@ -286,29 +292,30 @@ function mapStage(apiStage, group) {
 }
 
 /**
- * Syncs result data from FINISHED API matches into results.json.
+ * Syncs result data from FINISHED and in-progress API matches into results.json.
  *
- * - Only processes matches with status "FINISHED"
+ * - Processes matches with status "FINISHED" (final) and LIVE/IN_PLAY/PAUSED (live)
  * - Matches API entries to existing fixtures by `apiMatchId`
  * - Creates or updates result entries matched by fixtureId
+ * - Tags each result with `status`: "live" (in progress) or "completed" (final)
  * - Stores homeScore and awayScore as non-negative integers (0–99)
- * - Handles penalty shootout data when scores are equal
- * - Sets fixture status to "completed" only when result entry exists
+ * - Handles penalty shootout data for finished matches when scores are equal
+ * - Sets fixture status to "completed" only when a finished result entry exists
+ * - Removes a stale "live" result if its match reverts to a non-active status
+ *   (e.g. postponed/suspended after kickoff)
  * - Prevents duplicate results for same fixtureId (updates existing)
- * - Skips finished matches that cannot be matched to a fixture (logs warning)
- * - Triggers checkTournamentComplete() when new results are added
+ * - Triggers checkTournamentComplete() only when finished results are written
+ *
+ * Live results are provisional: standings count them immediately (so the table
+ * updates in real time), but they never eliminate teams or complete the
+ * tournament — that is gated on "completed" results elsewhere.
  *
  * @param {Array<object>} apiMatches - Matches from the API response
- * @returns {Promise<number>} Number of results created or updated
+ * @returns {Promise<{ results: number, live: number }>}
+ *   results: number of result entries created/updated/removed this cycle
+ *   live: number of matches currently in progress
  */
 async function syncResults(apiMatches) {
-  // Filter to only FINISHED matches
-  const finishedMatches = apiMatches.filter(m => m.status === 'FINISHED');
-
-  if (finishedMatches.length === 0) {
-    return 0;
-  }
-
   // Read current fixtures and results
   const fixtureData = await readFile('fixtures.json');
   const existingFixtures = fixtureData.fixtures || [];
@@ -331,32 +338,61 @@ async function syncResults(apiMatches) {
   }
 
   let resultCount = 0;
+  let liveCount = 0;
   let fixturesModified = false;
+  let finishedResultWritten = false;
+  const removedResultIds = new Set();
 
-  for (const match of finishedMatches) {
+  for (const match of apiMatches) {
     const apiMatchId = match.id;
+    const isFinished = match.status === 'FINISHED';
+    const isLive = LIVE_API_STATUSES.has(match.status);
 
     // Find the corresponding fixture
     const fixture = fixturesByApiMatchId.get(apiMatchId);
 
-    if (!fixture) {
-      console.warn(
-        `[SyncService] Skipping finished match ${apiMatchId}: ` +
-        `no matching fixture found (home: ${match.homeTeam?.name}, away: ${match.awayTeam?.name})`
-      );
+    // Match is neither finished nor live: if we previously stored a provisional
+    // "live" result for it, the match reverted (postponed/suspended) — drop it.
+    if (!isFinished && !isLive) {
+      if (fixture) {
+        const existingResult = resultsByFixtureId.get(fixture.id);
+        if (existingResult && existingResult.status === 'live') {
+          removedResultIds.add(existingResult.id);
+          resultsByFixtureId.delete(fixture.id);
+          resultCount++;
+        }
+      }
       continue;
     }
 
-    // Extract scores from the API response
+    if (!fixture) {
+      // Only warn for finished matches; live matches with no fixture are noisy and transient
+      if (isFinished) {
+        console.warn(
+          `[SyncService] Skipping finished match ${apiMatchId}: ` +
+          `no matching fixture found (home: ${match.homeTeam?.name}, away: ${match.awayTeam?.name})`
+        );
+      }
+      continue;
+    }
+
+    if (isLive) {
+      liveCount++;
+    }
+
+    // Extract scores from the API response (fullTime holds the running score while in play)
     const homeScore = match.score?.fullTime?.home;
     const awayScore = match.score?.fullTime?.away;
 
-    // Validate scores are non-negative integers in range 0–99
+    // Validate scores are non-negative integers in range 0–99.
+    // A live match before kickoff may report null scores — skip quietly in that case.
     if (!isValidScore(homeScore) || !isValidScore(awayScore)) {
-      console.warn(
-        `[SyncService] Skipping result for match ${apiMatchId}: ` +
-        `invalid scores (home: ${homeScore}, away: ${awayScore})`
-      );
+      if (isFinished) {
+        console.warn(
+          `[SyncService] Skipping result for match ${apiMatchId}: ` +
+          `invalid scores (home: ${homeScore}, away: ${awayScore})`
+        );
+      }
       continue;
     }
 
@@ -364,18 +400,31 @@ async function syncResults(apiMatches) {
     const clampedHomeScore = Math.min(Math.max(Math.floor(homeScore), 0), 99);
     const clampedAwayScore = Math.min(Math.max(Math.floor(awayScore), 0), 99);
 
-    // Build penalty shootout data if applicable
-    const penaltyShootout = buildPenaltyShootout(match, fixture, clampedHomeScore, clampedAwayScore);
+    const status = isFinished ? 'completed' : 'live';
+
+    // Penalty shootouts only apply to finished matches
+    const penaltyShootout = isFinished
+      ? buildPenaltyShootout(match, fixture, clampedHomeScore, clampedAwayScore)
+      : null;
 
     // Check if a result already exists for this fixture
     const existingResult = resultsByFixtureId.get(fixture.id);
 
     if (existingResult) {
       // Update existing result
+      const changed =
+        existingResult.homeScore !== clampedHomeScore ||
+        existingResult.awayScore !== clampedAwayScore ||
+        existingResult.status !== status;
+
       existingResult.homeScore = clampedHomeScore;
       existingResult.awayScore = clampedAwayScore;
+      existingResult.status = status;
       existingResult.penaltyShootout = penaltyShootout;
-      resultCount++;
+
+      if (changed) {
+        resultCount++;
+      }
     } else {
       // Create new result entry
       const newResult = {
@@ -387,6 +436,7 @@ async function syncResults(apiMatches) {
         awayScore: clampedAwayScore,
         date: fixture.date || new Date().toISOString(),
         stage: fixture.stage || 'Unknown',
+        status,
         penaltyShootout,
       };
 
@@ -395,27 +445,37 @@ async function syncResults(apiMatches) {
       resultCount++;
     }
 
-    // Set fixture status to "completed" now that a result entry exists
-    if (fixture.status !== 'completed') {
-      fixture.status = 'completed';
-      fixturesModified = true;
+    if (isFinished) {
+      finishedResultWritten = true;
+
+      // Set fixture status to "completed" now that a finished result entry exists
+      if (fixture.status !== 'completed') {
+        fixture.status = 'completed';
+        fixturesModified = true;
+      }
     }
   }
 
   // Write updated data if there were changes
   if (resultCount > 0) {
-    await writeFile('results.json', { results: existingResults });
+    const finalResults = removedResultIds.size > 0
+      ? existingResults.filter(r => !removedResultIds.has(r.id))
+      : existingResults;
+
+    await writeFile('results.json', { results: finalResults });
 
     // Write fixtures if any status changed to "completed"
     if (fixturesModified) {
       await writeFile('fixtures.json', { fixtures: existingFixtures });
     }
 
-    // Trigger tournament completion check
-    await checkTournamentComplete();
+    // Trigger tournament completion check only when a finished result was written
+    if (finishedResultWritten) {
+      await checkTournamentComplete();
+    }
   }
 
-  return resultCount;
+  return { results: resultCount, live: liveCount };
 }
 
 /**

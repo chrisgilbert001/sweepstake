@@ -16,6 +16,16 @@
   letter-spacing: var(--tracking-wide);
 }
 
+.standings-live-banner {
+  background-color: color-mix(in srgb, var(--color-error) 16%, transparent);
+  color: var(--color-error);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-error) 40%, transparent);
+  text-align: center;
+  padding: var(--space-sm) var(--space-md);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-wide);
+}
+
 .standings-table {
   width: 100%;
   border-collapse: collapse;

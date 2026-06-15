@@ -4,20 +4,27 @@ import { checkTournamentComplete } from './tournamentService.js';
 
 const RESULTS_FILE = 'results.json';
 
+// Stage names come from two sources that historically diverged: the API sync
+// emits plural forms ("Quarter-finals", "Third Place") while manual admin entry
+// uses the original singular forms ("Quarter-final", "Third-place playoff").
+// Both are accepted so results from either source are recognised. "Round of 32"
+// is part of the 48-team 2026 knockout stage and its losers are eliminated too.
 const VALID_STAGES = [
   'Group Stage',
+  'Round of 32',
   'Round of 16',
-  'Quarter-final',
-  'Semi-final',
-  'Third-place playoff',
+  'Quarter-finals', 'Quarter-final',
+  'Semi-finals', 'Semi-final',
+  'Third Place', 'Third-place playoff',
   'Final'
 ];
 
 const KNOCKOUT_STAGES_THAT_ELIMINATE = [
+  'Round of 32',
   'Round of 16',
-  'Quarter-final',
-  'Semi-final',
-  'Third-place playoff'
+  'Quarter-finals', 'Quarter-final',
+  'Semi-finals', 'Semi-final',
+  'Third Place', 'Third-place playoff'
 ];
 
 /**
@@ -200,6 +207,8 @@ export async function getEliminatedTeams() {
   const eliminated = new Set();
 
   for (const result of data.results) {
+    // Live (in-progress) results are provisional and never eliminate a team
+    if (result.status === 'live') continue;
     if (!KNOCKOUT_STAGES_THAT_ELIMINATE.includes(result.stage)) continue;
 
     if (result.penaltyShootout) {

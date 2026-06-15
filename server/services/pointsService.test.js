@@ -168,6 +168,45 @@ describe('pointsService', () => {
       expect(stats.losses).toBe(0);
     });
 
+    it('does not count the third-place playoff toward scoring (API-sync stage name)', async () => {
+      await createTestLeague('test-league',
+        [{ id: 'p1', name: 'Alice' }],
+        { p1: { pot1: ['usa'], pot2: [], pot3: [], pot4: [] } }
+      );
+      await writeFile(RESULTS_FILE, {
+        results: [{
+          id: 'r001', fixtureId: 'f001', homeTeam: 'usa', awayTeam: 'bra',
+          homeScore: 3, awayScore: 0, date: '2026-07-18T18:00:00Z', stage: 'Third Place', penaltyShootout: null
+        }]
+      });
+
+      const stats = await calculatePoints('p1', 'test-league');
+
+      expect(stats).toEqual({
+        points: 0, wins: 0, draws: 0, losses: 0,
+        goalsScored: 0, goalsConceded: 0, goalDifference: 0
+      });
+    });
+
+    it('does not count the third-place playoff toward scoring (manual-entry stage name)', async () => {
+      await createTestLeague('test-league',
+        [{ id: 'p1', name: 'Alice' }],
+        { p1: { pot1: ['usa'], pot2: [], pot3: [], pot4: [] } }
+      );
+      await writeFile(RESULTS_FILE, {
+        results: [{
+          id: 'r001', fixtureId: 'f001', homeTeam: 'usa', awayTeam: 'bra',
+          homeScore: 3, awayScore: 0, date: '2026-07-18T18:00:00Z', stage: 'Third-place playoff', penaltyShootout: null
+        }]
+      });
+
+      const stats = await calculatePoints('p1', 'test-league');
+
+      expect(stats.points).toBe(0);
+      expect(stats.wins).toBe(0);
+      expect(stats.goalsScored).toBe(0);
+    });
+
     it('awards 0 points for a loss', async () => {
       await createTestLeague('test-league',
         [{ id: 'p1', name: 'Alice' }],

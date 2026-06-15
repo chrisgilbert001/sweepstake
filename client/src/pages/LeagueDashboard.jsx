@@ -87,6 +87,9 @@ export default function LeagueDashboard() {
       let goalsScored = 0, goalsConceded = 0;
 
       for (const result of results) {
+        // The third-place playoff does not count toward sweepstake scoring.
+        // Accept both the API-sync name and the manual-entry name.
+        if (result.stage === 'Third Place' || result.stage === 'Third-place playoff') continue;
         for (const teamId of participantTeams) {
           if (result.homeTeam === teamId) {
             goalsScored += result.homeScore;
@@ -166,9 +169,19 @@ export default function LeagueDashboard() {
   // Compute eliminated teams
   function getEliminatedTeams() {
     const eliminated = new Set();
-    const knockoutStages = ['Round of 16', 'Quarter-final', 'Semi-final', 'Third-place playoff'];
+    // Accept both the API-sync stage names (plural) and the original
+    // manual-entry names (singular); include Round of 32 (48-team format).
+    const knockoutStages = [
+      'Round of 32',
+      'Round of 16',
+      'Quarter-finals', 'Quarter-final',
+      'Semi-finals', 'Semi-final',
+      'Third Place', 'Third-place playoff',
+    ];
 
     for (const result of results) {
+      // Live (in-progress) results are provisional — never eliminate on them
+      if (result.status === 'live') continue;
       if (!knockoutStages.includes(result.stage)) continue;
 
       if (result.penaltyShootout) {
@@ -259,6 +272,7 @@ export default function LeagueDashboard() {
   const participantCount = participants.length;
   const standings = computeStandings();
   const eliminatedTeams = getEliminatedTeams();
+  const hasLiveResults = results.some((r) => r.status === 'live');
 
   // Check if current user is the league owner
   const currentEmail = localStorage.getItem('sweepstake_user_email') || '';
@@ -378,6 +392,7 @@ export default function LeagueDashboard() {
               tournamentOdds={tournamentOdds}
               teams={teams}
               isTournamentComplete={isTournamentComplete}
+              hasLiveResults={hasLiveResults}
               onTeamClick={handleTeamClick}
             />
           </div>

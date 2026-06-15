@@ -120,6 +120,10 @@ export async function getActivityFeed(leagueSlug, page = 1, limit = 50) {
   const events = [];
 
   for (const result of results) {
+    // Live (in-progress) results are provisional — don't generate activity
+    // events for them; wait until the match is final.
+    if (result.status === 'live') continue;
+
     const homeOwner = teamOwnerMap.get(result.homeTeam) || null;
     const awayOwner = teamOwnerMap.get(result.awayTeam) || null;
 

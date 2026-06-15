@@ -479,6 +479,7 @@ describe('syncService - sync status persistence', () => {
         stats: {
           fixturesUpdated: 0,
           resultsCreated: 0,
+          liveUpdated: 0,
           standingsUpdated: false,
         },
       },
@@ -498,6 +499,7 @@ describe('syncService - sync status persistence', () => {
         stats: {
           fixturesUpdated: 0,
           resultsCreated: 0,
+          liveUpdated: 0,
           standingsUpdated: false,
         },
       },

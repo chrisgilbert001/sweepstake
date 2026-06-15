@@ -27,7 +27,12 @@ export async function calculatePoints(participantId, leagueSlug) {
 
   const participantTeams = Object.values(allocations).flat();
   const data = await readFile(RESULTS_FILE);
-  const results = data.results.filter(r => r.stage !== 'Third Place');
+  // The third-place playoff does not count toward sweepstake scoring. Exclude
+  // both the API-sync stage name ('Third Place') and the manual-entry name
+  // ('Third-place playoff').
+  const results = data.results.filter(
+    r => r.stage !== 'Third Place' && r.stage !== 'Third-place playoff'
+  );
 
   let points = 0;
   let wins = 0;

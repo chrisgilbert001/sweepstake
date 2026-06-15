@@ -139,19 +139,31 @@ export default function MatchDayView() {
       ) : (
         <div className="matchday-fixtures">
           {fixtures.map((fixture) => {
+            const isLive = fixture.status === 'in_progress';
             const isCompleted = fixture.status === 'completed';
+            const hasScore = fixture.homeScore != null && fixture.awayScore != null;
             const homeOwner = ownerMap[fixture.homeTeam];
             const awayOwner = ownerMap[fixture.awayTeam];
             const highlighted = !!(homeOwner || awayOwner);
 
+            const stateClass = isCompleted
+              ? 'fixture-completed'
+              : isLive
+                ? 'fixture-live'
+                : 'fixture-scheduled';
+
             return (
               <div
                 key={fixture.id}
-                className={`fixture-card ${highlighted ? 'fixture-highlighted' : ''} ${isCompleted ? 'fixture-completed' : 'fixture-scheduled'}`}
+                className={`fixture-card ${highlighted ? 'fixture-highlighted' : ''} ${stateClass}`}
               >
                 <div className="fixture-meta">
                   <span className="fixture-stage">{fixture.stage}</span>
-                  <CountdownTimer kickoffTime={fixture.date} status={fixture.status} />
+                  {isLive ? (
+                    <span className="fixture-live-badge" aria-label="Match in progress">● LIVE</span>
+                  ) : (
+                    <CountdownTimer kickoffTime={fixture.date} status={fixture.status} />
+                  )}
                   <span className="fixture-datetime">
                     {formatDate(fixture.date)} · {formatTime(fixture.date)}
                   </span>
@@ -166,8 +178,8 @@ export default function MatchDayView() {
                   </div>
 
                   <div className="fixture-score">
-                    {isCompleted ? (
-                      <span className="score-display">
+                    {(isCompleted || isLive) && hasScore ? (
+                      <span className={`score-display ${isLive ? 'score-live' : ''}`}>
                         {fixture.homeScore} – {fixture.awayScore}
                         {fixture.penaltyShootout && (
                           <span className="penalty-indicator" title={`Penalties: ${fixture.penaltyShootout.homeGoals}–${fixture.penaltyShootout.awayGoals}`}>

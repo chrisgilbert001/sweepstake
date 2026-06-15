@@ -83,11 +83,14 @@ export default function ScheduleView() {
     return !!(ownerMap[fixture.homeTeam] || ownerMap[fixture.awayTeam]);
   }
 
-  // Check if all fixtures have results
+  // Check if all fixtures have a FINAL result (live results don't count)
   function allMatchesCompleted() {
     if (fixtures.length === 0) return false;
     const resultsMap = getResultsMap();
-    return fixtures.every((f) => resultsMap[f.id]);
+    return fixtures.every((f) => {
+      const result = resultsMap[f.id];
+      return result && result.status !== 'live';
+    });
   }
 
   function formatDate(dateStr) {
@@ -152,16 +155,24 @@ export default function ScheduleView() {
         {mergedFixtures.map((fixture) => {
           const highlighted = isHighlighted(fixture, ownerMap);
           const hasResult = !!fixture.result;
+          const isLive = hasResult && fixture.result.status === 'live';
+          const isCompleted = hasResult && !isLive;
+
+          const stateClass = isCompleted
+            ? 'fixture-completed'
+            : isLive
+              ? 'fixture-live'
+              : 'fixture-scheduled';
 
           return (
             <div
               key={fixture.id}
-              className={`fixture-card ${highlighted ? 'fixture-highlighted' : ''} ${hasResult ? 'fixture-completed' : 'fixture-scheduled'}`}
+              className={`fixture-card ${highlighted ? 'fixture-highlighted' : ''} ${stateClass}`}
             >
               <div className="fixture-meta">
                 <span className="fixture-stage">{fixture.stage}</span>
-                <span className={`fixture-status-badge ${hasResult ? 'status-completed' : 'status-scheduled'}`}>
-                  {hasResult ? 'FT' : 'Upcoming'}
+                <span className={`fixture-status-badge ${isCompleted ? 'status-completed' : isLive ? 'status-live' : 'status-scheduled'}`}>
+                  {isCompleted ? 'FT' : isLive ? '● LIVE' : 'Upcoming'}
                 </span>
                 <span className="fixture-datetime">
                   {formatDate(fixture.date)} · {formatTime(fixture.date)}
@@ -178,7 +189,7 @@ export default function ScheduleView() {
 
                 <div className="fixture-score">
                   {hasResult ? (
-                    <span className="score-display">
+                    <span className={`score-display ${isLive ? 'score-live' : ''}`}>
                       {fixture.result.homeScore} – {fixture.result.awayScore}
                       {fixture.result.penaltyShootout && (
                         <span className="penalty-indicator" title={`Penalties: ${fixture.result.penaltyShootout.homeGoals}–${fixture.result.penaltyShootout.awayGoals}`}>

@@ -11,6 +11,7 @@ import './StandingsTable.css';
  * - tournamentOdds: Object mapping teamId -> odds value (or null)
  * - teams: Array of all team objects { id, name } for display
  * - isTournamentComplete: boolean
+ * - hasLiveResults: boolean - true when one or more matches are in progress
  * - onTeamClick: function(teamId) - called when a team badge is clicked
  */
 export default function StandingsTable({
@@ -20,6 +21,7 @@ export default function StandingsTable({
   tournamentOdds = null,
   teams = [],
   isTournamentComplete = false,
+  hasLiveResults = false,
   onTeamClick,
 }) {
   const [selectedParticipant, setSelectedParticipant] = useState(null);
@@ -141,6 +143,12 @@ export default function StandingsTable({
       {isTournamentComplete && (
         <div className="standings-complete-banner">
           🏆 Tournament Complete — Final Standings
+        </div>
+      )}
+
+      {!isTournamentComplete && hasLiveResults && (
+        <div className="standings-live-banner">
+          🔴 LIVE — points update in real time as matches play
         </div>
       )}
 
