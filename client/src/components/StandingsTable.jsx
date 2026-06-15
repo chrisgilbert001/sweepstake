@@ -12,6 +12,7 @@ import './StandingsTable.css';
  * - teams: Array of all team objects { id, name } for display
  * - isTournamentComplete: boolean
  * - hasLiveResults: boolean - true when one or more matches are in progress
+ * - liveTeamIds: Set of team IDs currently in a match in progress
  * - onTeamClick: function(teamId) - called when a team badge is clicked
  */
 export default function StandingsTable({
@@ -22,6 +23,7 @@ export default function StandingsTable({
   teams = [],
   isTournamentComplete = false,
   hasLiveResults = false,
+  liveTeamIds = new Set(),
   onTeamClick,
 }) {
   const [selectedParticipant, setSelectedParticipant] = useState(null);
@@ -114,6 +116,12 @@ export default function StandingsTable({
     return [...teamIds].sort((a, b) => (teamSeedMap[a] || 99) - (teamSeedMap[b] || 99));
   }
 
+  // Teams owned by this participant that are currently in a match in progress.
+  function getParticipantLiveTeams(participantId) {
+    if (liveTeamIds.size === 0) return [];
+    return getParticipantTeams(participantId).filter((id) => liveTeamIds.has(id));
+  }
+
   // Close popup on Escape
   const handleKeyDown = useCallback((e) => {
     if (e.key === 'Escape') {
@@ -168,6 +176,10 @@ export default function StandingsTable({
         <tbody>
           {getSortedStandings().map((entry) => {
             const trophy = getTrophyIcon(entry.rank);
+            const liveTeams = getParticipantLiveTeams(entry.participantId);
+            const liveTitle = liveTeams.length > 0
+              ? `Live now: ${liveTeams.map((id) => teamNameMap[id] || id).join(', ')}`
+              : '';
 
             return (
               <tr
@@ -188,7 +200,14 @@ export default function StandingsTable({
                     entry.rank
                   )}
                 </td>
-                <td className="name-cell">{entry.participantName}</td>
+                <td className="name-cell">
+                  {entry.participantName}
+                  {liveTeams.length > 0 && (
+                    <span className="name-live-badge" title={liveTitle} aria-label={liveTitle}>
+                      ● LIVE
+                    </span>
+                  )}
+                </td>
                 <td className="points-cell">{entry.points}</td>
                 <td className="col-desktop stat-cell">{entry.wins}</td>
                 <td className="col-desktop stat-cell">{entry.draws}</td>

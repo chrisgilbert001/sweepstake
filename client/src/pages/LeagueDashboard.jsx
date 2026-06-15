@@ -274,6 +274,16 @@ export default function LeagueDashboard() {
   const eliminatedTeams = getEliminatedTeams();
   const hasLiveResults = results.some((r) => r.status === 'live');
 
+  // Teams currently in a match in progress, so the standings can flag which
+  // participants have a live game.
+  const liveTeamIds = new Set();
+  for (const r of results) {
+    if (r.status === 'live') {
+      liveTeamIds.add(r.homeTeam);
+      liveTeamIds.add(r.awayTeam);
+    }
+  }
+
   // Check if current user is the league owner
   const currentEmail = localStorage.getItem('sweepstake_user_email') || '';
   const isOwner = league.createdBy && league.createdBy === currentEmail;
@@ -393,6 +403,7 @@ export default function LeagueDashboard() {
               teams={teams}
               isTournamentComplete={isTournamentComplete}
               hasLiveResults={hasLiveResults}
+              liveTeamIds={liveTeamIds}
               onTeamClick={handleTeamClick}
             />
           </div>

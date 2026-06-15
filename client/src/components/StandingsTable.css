@@ -33,6 +33,22 @@
   font-variant-numeric: tabular-nums;
 }
 
+.name-live-badge {
+  display: inline-block;
+  margin-left: var(--space-sm);
+  padding: 1px 6px;
+  border-radius: var(--radius-full, 999px);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+  white-space: nowrap;
+  background-color: color-mix(in srgb, var(--color-error) 18%, transparent);
+  color: var(--color-error);
+  border: 1px solid color-mix(in srgb, var(--color-error) 45%, transparent);
+  animation: pulse 2s infinite;
+}
+
 .standings-table th,
 .standings-table td {
   padding: var(--space-sm) var(--space-md);
