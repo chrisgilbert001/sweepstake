@@ -1,15 +1,30 @@
 import { readFile } from './storageService.js';
+import { readFile as fsReadFile } from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const FIXTURES_FILE = 'fixtures.json';
 const RESULTS_FILE = 'results.json';
 
 /**
+ * Path to the bracket template bundled with the application code.
+ * This is a static reference file, not runtime data, so it reads from the
+ * app directory rather than the persistent DATA_DIR.
+ */
+const TEMPLATE_PATH = path.join(__dirname, '..', 'data', 'bracket-template.json');
+
+/**
  * Load the bracket template, returning null if missing or malformed.
+ * Reads directly from the deployed code directory (not DATA_DIR).
  * @returns {Promise<object|null>}
  */
 async function loadBracketTemplate() {
   try {
-    return await readFile('bracket-template.json');
+    const content = await fsReadFile(TEMPLATE_PATH, 'utf-8');
+    return JSON.parse(content);
   } catch (err) {
     console.warn('[BracketService] Bracket template unavailable, using TBD fallback:', err.message || err);
     return null;
