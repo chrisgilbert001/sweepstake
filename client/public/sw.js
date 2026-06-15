@@ -1,5 +1,5 @@
-const CACHE_NAME = 'sweepstake-v1';
-const APP_SHELL_CACHE = 'sweepstake-shell-v1';
+const CACHE_NAME = 'sweepstake-v2';
+const APP_SHELL_CACHE = 'sweepstake-shell-v2';
 const DATA_CACHE = 'sweepstake-data-v1';
 
 // App shell resources to cache on install
@@ -58,7 +58,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache-first strategy for app shell (HTML, CSS, JS, images)
+  // Network-first for navigation requests (HTML) so deploys take effect immediately
+  if (request.mode === 'navigate' || url.pathname === '/' || url.pathname.endsWith('.html')) {
+    event.respondWith(networkFirst(request, APP_SHELL_CACHE));
+    return;
+  }
+
+  // Cache-first strategy for static assets (JS, CSS, images — content-hashed by Vite)
   event.respondWith(cacheFirst(request, APP_SHELL_CACHE));
 });
 
