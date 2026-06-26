@@ -220,22 +220,29 @@ function computeLayout(rounds) {
 
   const roundLayouts = [];
 
-  // Calculate total height based on the first round (most fixtures)
-  const firstRoundHeight =
-    rounds[0].fixtures.length * FIXTURE_HEIGHT +
-    (rounds[0].fixtures.length - 1) * FIXTURE_VERTICAL_GAP;
+  // Base the bracket height on the tallest round, not the first round. The
+  // first round is usually the largest, but once real results replace the
+  // generated placeholders it can end up with fewer fixtures than a later
+  // round that's still showing placeholders. Sizing off the first round in
+  // that case makes the SVG too short to contain the taller round and pushes
+  // its fixtures to negative Y (off the top), so they get clipped with no way
+  // to scroll to them.
+  const maxRoundHeight =
+    maxFixtures * FIXTURE_HEIGHT + (maxFixtures - 1) * FIXTURE_VERTICAL_GAP;
 
-  const totalHeight = firstRoundHeight + PADDING * 2 + 20; // extra for round titles
+  const totalHeight = maxRoundHeight + PADDING * 2 + 20; // extra for round titles
 
   for (let roundIndex = 0; roundIndex < rounds.length; roundIndex++) {
     const round = rounds[roundIndex];
     const x = PADDING + roundIndex * (FIXTURE_WIDTH + ROUND_GAP);
     const fixtureCount = round.fixtures.length;
 
-    // Calculate vertical spacing so fixtures are centered
+    // Calculate vertical spacing so fixtures are centered within the tallest
+    // round. (maxRoundHeight - roundHeight) is always >= 0, so startY never
+    // goes negative and every fixture stays within the SVG bounds.
     const roundHeight =
       fixtureCount * FIXTURE_HEIGHT + (fixtureCount - 1) * FIXTURE_VERTICAL_GAP;
-    const startY = PADDING + 20 + (firstRoundHeight - roundHeight) / 2;
+    const startY = PADDING + 20 + (maxRoundHeight - roundHeight) / 2;
 
     const fixtureLayouts = round.fixtures.map((fixture, fixtureIndex) => {
       const y = startY + fixtureIndex * (FIXTURE_HEIGHT + FIXTURE_VERTICAL_GAP);

@@ -1,14 +1,79 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useLeague } from '../context/LeagueContext.jsx';
 import { runFullDraft } from '../api/draft.js';
 import { getTournamentOdds, getMatchOdds } from '../api/odds.js';
+import { getGroupStandings } from '../api/groups.js';
 import Card from '../components/ui/Card.jsx';
 import StandingsTable from '../components/StandingsTable.jsx';
 import ShareExportButtons from '../components/ShareExportButtons.jsx';
 import TeamDetailModal from '../components/TeamDetailModal.jsx';
 import DraftRevealDialog from '../components/DraftRevealDialog.jsx';
 import './LeagueDashboard.css';
+
+// 2026 World Cup group stage: 12 groups of 4. Each team plays 3 group games.
+// The Round of 32 has 32 slots: the top 2 of every group qualify automatically
+// and the best 8 of the 12 third-placed teams also advance.
+const GROUP_GAMES_PER_TEAM = 3;
+const KNOCKOUT_SLOTS = 32;
+
+/**
+ * Derive the teams knocked out at the group stage from group standings.
+ *
+ * Phased, to match how qualification actually resolves:
+ * - Once a group has played all its games, its bottom (4th) team is out — a
+ *   4th-placed team can never be a best-third-placed qualifier.
+ * - The third-placed cut compares third-placed teams ACROSS groups, so it can
+ *   only be settled once every group is complete. At that point the best
+ *   (KNOCKOUT_SLOTS - 2 * groupCount) third-placed teams qualify and the rest
+ *   are eliminated.
+ *
+ * Standings are already sorted (points, GD, GF) by the /groups endpoint, so we
+ * reuse that ordering rather than re-implementing the tiebreakers.
+ *
+ * @param {Array<{ group: string, teams: Array<object> }>} groupStandings
+ * @returns {Set<string>} eliminated team IDs
+ */
+function getGroupStageEliminated(groupStandings) {
+  const eliminated = new Set();
+  if (!Array.isArray(groupStandings) || groupStandings.length === 0) {
+    return eliminated;
+  }
+
+  // A group is only decided once every team in it has played all its games.
+  const completedGroups = groupStandings.filter(
+    (g) =>
+      Array.isArray(g.teams) &&
+      g.teams.length > 0 &&
+      g.teams.every((t) => t.played >= GROUP_GAMES_PER_TEAM)
+  );
+
+  // Bottom of each completed group is out.
+  for (const group of completedGroups) {
+    const last = group.teams[group.teams.length - 1];
+    if (last) eliminated.add(last.teamId);
+  }
+
+  // Best-third-placed comparison needs every group finished.
+  if (completedGroups.length === groupStandings.length) {
+    const thirdPlaceQualifiers = KNOCKOUT_SLOTS - groupStandings.length * 2;
+    const thirdPlaced = groupStandings
+      .map((g) => g.teams[2])
+      .filter(Boolean)
+      .sort((a, b) => {
+        if (b.points !== a.points) return b.points - a.points;
+        if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
+        return b.goalsFor - a.goalsFor;
+      });
+
+    // Everyone ranked below the qualifying cut misses out.
+    for (const team of thirdPlaced.slice(Math.max(0, thirdPlaceQualifiers))) {
+      eliminated.add(team.teamId);
+    }
+  }
+
+  return eliminated;
+}
 
 /**
  * LeagueDashboard — index route for /league/:slug.
@@ -38,6 +103,23 @@ export default function LeagueDashboard() {
 
   // Tournament status
   const [isTournamentComplete, setIsTournamentComplete] = useState(false);
+
+  // Group standings, used to derive group-stage eliminations. Computed
+  // server-side from the same results, so we refetch when results change.
+  const [groupStandings, setGroupStandings] = useState([]);
+  useEffect(() => {
+    let cancelled = false;
+    getGroupStandings()
+      .then((data) => {
+        if (!cancelled) setGroupStandings(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (!cancelled) setGroupStandings([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [results]);
 
   // Ref for standings table (used by ShareExportButtons for image capture)
   const standingsRef = useRef(null);
@@ -168,7 +250,10 @@ export default function LeagueDashboard() {
 
   // Compute eliminated teams
   function getEliminatedTeams() {
-    const eliminated = new Set();
+    // Start with group-stage eliminations (bottom of each completed group, plus
+    // the third-placed teams that miss the best-third cut once groups finish),
+    // then add knockout losers below.
+    const eliminated = getGroupStageEliminated(groupStandings);
     // Accept both the API-sync stage names (plural) and the original
     // manual-entry names (singular); include Round of 32 (48-team format).
     const knockoutStages = [
