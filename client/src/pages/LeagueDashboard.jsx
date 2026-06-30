@@ -157,6 +157,7 @@ export default function LeagueDashboard() {
           points: 0,
           wins: 0,
           draws: 0,
+          penaltyWins: 0,
           losses: 0,
           goalsScored: 0,
           goalsConceded: 0,
@@ -165,7 +166,7 @@ export default function LeagueDashboard() {
       }
 
       const participantTeams = Object.values(allocations).flat();
-      let points = 0, wins = 0, draws = 0, losses = 0;
+      let points = 0, wins = 0, draws = 0, penaltyWins = 0, losses = 0;
       let goalsScored = 0, goalsConceded = 0;
 
       for (const result of results) {
@@ -181,9 +182,11 @@ export default function LeagueDashboard() {
               wins++;
             } else if (result.homeScore === result.awayScore) {
               points += 1;
-              draws++;
               if (result.penaltyShootout?.winner === teamId) {
                 points += 1;
+                penaltyWins++;
+              } else {
+                draws++;
               }
             } else {
               losses++;
@@ -196,9 +199,11 @@ export default function LeagueDashboard() {
               wins++;
             } else if (result.homeScore === result.awayScore) {
               points += 1;
-              draws++;
               if (result.penaltyShootout?.winner === teamId) {
                 points += 1;
+                penaltyWins++;
+              } else {
+                draws++;
               }
             } else {
               losses++;
@@ -213,6 +218,7 @@ export default function LeagueDashboard() {
         points,
         wins,
         draws,
+        penaltyWins,
         losses,
         goalsScored,
         goalsConceded,
