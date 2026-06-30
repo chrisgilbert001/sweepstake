@@ -49,7 +49,7 @@ export default function StandingsTable({
     } else {
       setSortKey(key);
       // Default direction: descending for points/wins/GD, ascending for rank/seed/losses
-      setSortDir(['points', 'wins', 'draws', 'goalDifference'].includes(key) ? 'desc' : 'asc');
+      setSortDir(['points', 'wins', 'draws', 'penaltyWins', 'goalDifference'].includes(key) ? 'desc' : 'asc');
     }
   }
 
@@ -67,6 +67,7 @@ export default function StandingsTable({
         case 'points': aVal = a.points; bVal = b.points; break;
         case 'wins': aVal = a.wins; bVal = b.wins; break;
         case 'draws': aVal = a.draws; bVal = b.draws; break;
+        case 'penaltyWins': aVal = a.penaltyWins || 0; bVal = b.penaltyWins || 0; break;
         case 'losses': aVal = a.losses; bVal = b.losses; break;
         case 'goalDifference': aVal = a.goalDifference; bVal = b.goalDifference; break;
         case 'seed': aVal = a.combinedSeed; bVal = b.combinedSeed; break;
@@ -80,7 +81,7 @@ export default function StandingsTable({
     return sorted;
   }
 
-  function SortHeader({ label, columnKey, className }) {
+  function SortHeader({ label, columnKey, className, title }) {
     const isActive = sortKey === columnKey;
     const arrow = isActive ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '';
     return (
@@ -88,6 +89,7 @@ export default function StandingsTable({
         className={`${className || ''} sortable-header${isActive ? ' sorted' : ''}`}
         onClick={() => handleSort(columnKey)}
         role="columnheader"
+        title={title}
         aria-sort={isActive ? (sortDir === 'asc' ? 'ascending' : 'descending') : 'none'}
         tabIndex={0}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSort(columnKey); } }}
@@ -169,6 +171,7 @@ export default function StandingsTable({
             <SortHeader label="W" columnKey="wins" className="col-desktop stat-cell" />
             <SortHeader label="D" columnKey="draws" className="col-desktop stat-cell" />
             <SortHeader label="L" columnKey="losses" className="col-desktop stat-cell" />
+            <SortHeader label="PW" columnKey="penaltyWins" className="col-desktop stat-cell" title="Penalty shootout wins" />
             <SortHeader label="GD" columnKey="goalDifference" className="col-desktop stat-cell" />
             <SortHeader label="Seed" columnKey="seed" className="col-desktop stat-cell" />
           </tr>
@@ -212,6 +215,7 @@ export default function StandingsTable({
                 <td className="col-desktop stat-cell">{entry.wins}</td>
                 <td className="col-desktop stat-cell">{entry.draws}</td>
                 <td className="col-desktop stat-cell">{entry.losses}</td>
+                <td className="col-desktop stat-cell">{entry.penaltyWins || 0}</td>
                 <td className="col-desktop stat-cell">{entry.goalDifference > 0 ? `+${entry.goalDifference}` : entry.goalDifference}</td>
                 <td className="col-desktop stat-cell seed-cell">{entry.combinedSeed}</td>
               </tr>
@@ -247,6 +251,10 @@ export default function StandingsTable({
               <div className="popup-stat">
                 <div className="popup-stat__value">{selectedParticipant.draws}</div>
                 <div className="popup-stat__label">Draws</div>
+              </div>
+              <div className="popup-stat">
+                <div className="popup-stat__value">{selectedParticipant.penaltyWins || 0}</div>
+                <div className="popup-stat__label">Pen Wins</div>
               </div>
               <div className="popup-stat">
                 <div className="popup-stat__value">{selectedParticipant.losses}</div>

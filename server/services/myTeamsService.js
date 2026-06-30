@@ -60,6 +60,7 @@ export async function getMyTeamsData(leagueSlug, participantId) {
         points: stats.points,
         wins: stats.wins,
         draws: stats.draws,
+        penaltyWins: stats.penaltyWins,
         losses: stats.losses,
         goalsScored: stats.goalsScored,
         goalsConceded: stats.goalsConceded,
@@ -91,16 +92,19 @@ function buildTeamLookup(teamsData) {
 
 /**
  * Calculate stats for a single team from all results.
- * Points: 3 per win, 1 per draw, +1 bonus for penalty shootout win (on a draw).
+ * Points: 3 per win, 1 per draw, +1 bonus for a penalty shootout win.
+ * A shootout win is counted under penaltyWins (not draws); the shootout loser
+ * still counts as a draw (1 point, no bonus).
  *
  * @param {string} teamId
  * @param {Array} results
- * @returns {{points: number, wins: number, draws: number, losses: number, goalsScored: number, goalsConceded: number}}
+ * @returns {{points: number, wins: number, draws: number, penaltyWins: number, losses: number, goalsScored: number, goalsConceded: number}}
  */
 export function calculateTeamStats(teamId, results) {
   let points = 0;
   let wins = 0;
   let draws = 0;
+  let penaltyWins = 0;
   let losses = 0;
   let goalsScored = 0;
   let goalsConceded = 0;
@@ -117,9 +121,11 @@ export function calculateTeamStats(teamId, results) {
         wins++;
       } else if (result.homeScore === result.awayScore) {
         points += 1;
-        draws++;
         if (result.penaltyShootout?.winner === teamId) {
           points += 1;
+          penaltyWins++;
+        } else {
+          draws++;
         }
       } else {
         losses++;
@@ -132,9 +138,11 @@ export function calculateTeamStats(teamId, results) {
         wins++;
       } else if (result.homeScore === result.awayScore) {
         points += 1;
-        draws++;
         if (result.penaltyShootout?.winner === teamId) {
           points += 1;
+          penaltyWins++;
+        } else {
+          draws++;
         }
       } else {
         losses++;
@@ -142,15 +150,17 @@ export function calculateTeamStats(teamId, results) {
     }
   }
 
-  return { points, wins, draws, losses, goalsScored, goalsConceded };
+  return { points, wins, draws, penaltyWins, losses, goalsScored, goalsConceded };
 }
 
 /**
- * Calculate form indicator: last 5 results as W/D/L sequence, most recent first.
+ * Calculate form indicator: last 5 results as W/D/L/P sequence, most recent
+ * first. "P" marks a win on a penalty shootout (a level match won on pens);
+ * the shootout loser is still recorded as "D".
  *
  * @param {string} teamId
  * @param {Array} results
- * @returns {Array<"W"|"D"|"L">}
+ * @returns {Array<"W"|"D"|"L"|"P">}
  */
 export function calculateForm(teamId, results) {
   // Filter results involving this team
@@ -165,15 +175,15 @@ export function calculateForm(teamId, results) {
   const recent = teamResults.slice(0, 5);
 
   return recent.map(result => {
-    if (result.homeTeam === teamId) {
-      if (result.homeScore > result.awayScore) return 'W';
-      if (result.homeScore === result.awayScore) return 'D';
-      return 'L';
-    } else {
-      if (result.awayScore > result.homeScore) return 'W';
-      if (result.homeScore === result.awayScore) return 'D';
-      return 'L';
+    const isHome = result.homeTeam === teamId;
+    const teamScore = isHome ? result.homeScore : result.awayScore;
+    const opponentScore = isHome ? result.awayScore : result.homeScore;
+
+    if (teamScore > opponentScore) return 'W';
+    if (teamScore === opponentScore) {
+      return result.penaltyShootout?.winner === teamId ? 'P' : 'D';
     }
+    return 'L';
   });
 }
 

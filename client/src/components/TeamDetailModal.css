@@ -207,6 +207,19 @@
   color: var(--color-error);
 }
 
+/* Won on a penalty shootout — a positive result (2 pts), shown in blue to
+   distinguish it from a regular win and from a plain draw. */
+.match-outcome.penalty-win {
+  background-color: color-mix(in srgb, #2563eb 16%, transparent);
+  color: #2563eb;
+}
+
+/* Lost on penalties — still a drawn match (1 pt), styled like a draw. */
+.match-outcome.penalty-loss {
+  background-color: color-mix(in srgb, var(--color-warning) 16%, transparent);
+  color: var(--color-warning);
+}
+
 .match-points {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);

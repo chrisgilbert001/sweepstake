@@ -56,8 +56,19 @@ export default function TeamDetailModal({
 
     if (teamScore > opponentScore) return 'win';
     if (teamScore < opponentScore) return 'loss';
+    if (match.penaltyShootout) {
+      return match.penaltyShootout.winner === tid ? 'penalty-win' : 'penalty-loss';
+    }
     return 'draw';
   }
+
+  const OUTCOME_LABELS = {
+    win: 'Win',
+    loss: 'Loss',
+    draw: 'Draw',
+    'penalty-win': 'Won on pens',
+    'penalty-loss': 'Lost on pens',
+  };
 
   function getOpponent(match, tid) {
     return match.homeTeam === tid ? match.awayTeam : match.homeTeam;
@@ -164,7 +175,7 @@ export default function TeamDetailModal({
 
                     <div className="match-footer">
                       <span className={`match-outcome ${outcome}`}>
-                        {outcome === 'win' ? 'Win' : outcome === 'draw' ? 'Draw' : 'Loss'}
+                        {OUTCOME_LABELS[outcome]}
                       </span>
                       <span className="match-points">+{points} pts</span>
                     </div>

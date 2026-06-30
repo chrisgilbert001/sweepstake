@@ -8,7 +8,7 @@ describe('myTeamsService', () => {
         { homeTeam: 'fra', awayTeam: 'ger', homeScore: 2, awayScore: 1, date: '2026-06-12', penaltyShootout: null }
       ];
       const stats = calculateTeamStats('eng', results);
-      expect(stats).toEqual({ points: 0, wins: 0, draws: 0, losses: 0, goalsScored: 0, goalsConceded: 0 });
+      expect(stats).toEqual({ points: 0, wins: 0, draws: 0, penaltyWins: 0, losses: 0, goalsScored: 0, goalsConceded: 0 });
     });
 
     it('should calculate a win correctly when team is home', () => {
@@ -16,7 +16,7 @@ describe('myTeamsService', () => {
         { homeTeam: 'eng', awayTeam: 'fra', homeScore: 3, awayScore: 1, date: '2026-06-12', penaltyShootout: null }
       ];
       const stats = calculateTeamStats('eng', results);
-      expect(stats).toEqual({ points: 3, wins: 1, draws: 0, losses: 0, goalsScored: 3, goalsConceded: 1 });
+      expect(stats).toEqual({ points: 3, wins: 1, draws: 0, penaltyWins: 0, losses: 0, goalsScored: 3, goalsConceded: 1 });
     });
 
     it('should calculate a win correctly when team is away', () => {
@@ -24,7 +24,7 @@ describe('myTeamsService', () => {
         { homeTeam: 'fra', awayTeam: 'eng', homeScore: 0, awayScore: 2, date: '2026-06-12', penaltyShootout: null }
       ];
       const stats = calculateTeamStats('eng', results);
-      expect(stats).toEqual({ points: 3, wins: 1, draws: 0, losses: 0, goalsScored: 2, goalsConceded: 0 });
+      expect(stats).toEqual({ points: 3, wins: 1, draws: 0, penaltyWins: 0, losses: 0, goalsScored: 2, goalsConceded: 0 });
     });
 
     it('should calculate a draw with 1 point', () => {
@@ -32,23 +32,23 @@ describe('myTeamsService', () => {
         { homeTeam: 'eng', awayTeam: 'fra', homeScore: 1, awayScore: 1, date: '2026-06-12', penaltyShootout: null }
       ];
       const stats = calculateTeamStats('eng', results);
-      expect(stats).toEqual({ points: 1, wins: 0, draws: 1, losses: 0, goalsScored: 1, goalsConceded: 1 });
+      expect(stats).toEqual({ points: 1, wins: 0, draws: 1, penaltyWins: 0, losses: 0, goalsScored: 1, goalsConceded: 1 });
     });
 
-    it('should add penalty bonus point when team wins shootout on a draw', () => {
+    it('should count a shootout win as a penalty win (2 pts), not a draw', () => {
       const results = [
         { homeTeam: 'eng', awayTeam: 'fra', homeScore: 1, awayScore: 1, date: '2026-06-12', penaltyShootout: { winner: 'eng', homeGoals: 4, awayGoals: 2 } }
       ];
       const stats = calculateTeamStats('eng', results);
-      expect(stats).toEqual({ points: 2, wins: 0, draws: 1, losses: 0, goalsScored: 1, goalsConceded: 1 });
+      expect(stats).toEqual({ points: 2, wins: 0, draws: 0, penaltyWins: 1, losses: 0, goalsScored: 1, goalsConceded: 1 });
     });
 
-    it('should not add penalty bonus when team loses shootout', () => {
+    it('should count a shootout loss as a draw with no bonus', () => {
       const results = [
         { homeTeam: 'eng', awayTeam: 'fra', homeScore: 1, awayScore: 1, date: '2026-06-12', penaltyShootout: { winner: 'fra', homeGoals: 2, awayGoals: 4 } }
       ];
       const stats = calculateTeamStats('eng', results);
-      expect(stats).toEqual({ points: 1, wins: 0, draws: 1, losses: 0, goalsScored: 1, goalsConceded: 1 });
+      expect(stats).toEqual({ points: 1, wins: 0, draws: 1, penaltyWins: 0, losses: 0, goalsScored: 1, goalsConceded: 1 });
     });
 
     it('should calculate a loss correctly', () => {
@@ -56,7 +56,7 @@ describe('myTeamsService', () => {
         { homeTeam: 'eng', awayTeam: 'fra', homeScore: 0, awayScore: 3, date: '2026-06-12', penaltyShootout: null }
       ];
       const stats = calculateTeamStats('eng', results);
-      expect(stats).toEqual({ points: 0, wins: 0, draws: 0, losses: 1, goalsScored: 0, goalsConceded: 3 });
+      expect(stats).toEqual({ points: 0, wins: 0, draws: 0, penaltyWins: 0, losses: 1, goalsScored: 0, goalsConceded: 3 });
     });
 
     it('should accumulate stats across multiple results', () => {
@@ -66,7 +66,7 @@ describe('myTeamsService', () => {
         { homeTeam: 'eng', awayTeam: 'bra', homeScore: 0, awayScore: 1, date: '2026-06-16', penaltyShootout: null }
       ];
       const stats = calculateTeamStats('eng', results);
-      expect(stats).toEqual({ points: 4, wins: 1, draws: 1, losses: 1, goalsScored: 3, goalsConceded: 2 });
+      expect(stats).toEqual({ points: 4, wins: 1, draws: 1, penaltyWins: 0, losses: 1, goalsScored: 3, goalsConceded: 2 });
     });
   });
 
@@ -101,6 +101,15 @@ describe('myTeamsService', () => {
       expect(form).toHaveLength(5);
       // Most recent 5: L (Jun 11), W (Jun 9), W (Jun 7), W (Jun 5), W (Jun 3)
       expect(form).toEqual(['L', 'W', 'W', 'W', 'W']);
+    });
+
+    it('should mark a shootout win as P and a shootout loss as D', () => {
+      const results = [
+        { homeTeam: 'eng', awayTeam: 'fra', homeScore: 1, awayScore: 1, date: '2026-06-10', penaltyShootout: { winner: 'eng', homeGoals: 4, awayGoals: 2 } },
+        { homeTeam: 'ger', awayTeam: 'eng', homeScore: 2, awayScore: 2, date: '2026-06-12', penaltyShootout: { winner: 'ger', homeGoals: 5, awayGoals: 4 } }
+      ];
+      // Most recent first: shootout loss (Jun 12) -> D, shootout win (Jun 10) -> P
+      expect(calculateForm('eng', results)).toEqual(['D', 'P']);
     });
 
     it('should handle fewer than 5 matches', () => {

@@ -380,9 +380,10 @@ async function syncResults(apiMatches) {
       liveCount++;
     }
 
-    // Extract scores from the API response (fullTime holds the running score while in play)
-    const homeScore = match.score?.fullTime?.home;
-    const awayScore = match.score?.fullTime?.away;
+    // Extract the base match score (the score the result hinges on, before any
+    // shootout). For most matches this is fullTime, but for penalty shootouts
+    // the API folds the shootout kicks into fullTime — see extractBaseScore.
+    const { home: homeScore, away: awayScore } = extractBaseScore(match.score);
 
     // Validate scores are non-negative integers in range 0–99.
     // A live match before kickoff may report null scores — skip quietly in that case.
@@ -498,6 +499,44 @@ function isValidScore(score) {
  * @param {number} awayScore - The validated away score
  * @returns {object|null} Penalty shootout data or null
  */
+/**
+ * Extracts the base match score (the score that decides the result, excluding
+ * any penalty shootout) from an API score object.
+ *
+ * football-data.org folds the shootout kicks into `fullTime` for matches
+ * decided on penalties — e.g. a 1-1 draw won 4-3 on penalties is reported as
+ * fullTime 5-4. Reading fullTime directly would record an unequal score, so
+ * the result would never be treated as a draw and no penalty bonus would apply.
+ *
+ * For PENALTY_SHOOTOUT matches we therefore recover the level score by
+ * subtracting the shootout kicks from fullTime (equivalently regularTime +
+ * extraTime). For all other matches fullTime already is the base score.
+ *
+ * @param {object} score - The API match.score object
+ * @returns {{ home: number|undefined, away: number|undefined }}
+ */
+function extractBaseScore(score) {
+  const fullHome = score?.fullTime?.home;
+  const fullAway = score?.fullTime?.away;
+
+  if (score?.duration === 'PENALTY_SHOOTOUT') {
+    const pens = score.penalties;
+    if (pens && typeof pens.home === 'number' && typeof pens.away === 'number') {
+      // fullTime = base score + shootout kicks; strip the kicks back off.
+      return { home: fullHome - pens.home, away: fullAway - pens.away };
+    }
+
+    // Fallback: reconstruct from regulation + extra time if penalties absent.
+    const reg = score.regularTime;
+    if (reg && typeof reg.home === 'number' && typeof reg.away === 'number') {
+      const ext = score.extraTime || { home: 0, away: 0 };
+      return { home: reg.home + (ext.home || 0), away: reg.away + (ext.away || 0) };
+    }
+  }
+
+  return { home: fullHome, away: fullAway };
+}
+
 function buildPenaltyShootout(match, fixture, homeScore, awayScore) {
   // Penalty shootout only applies when scores are equal
   if (homeScore !== awayScore) {

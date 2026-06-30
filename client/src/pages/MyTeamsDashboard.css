@@ -177,6 +177,16 @@
   background-color: #dc2626;
 }
 
+/* Penalty-shootout win: distinct blue so it reads apart from a plain win/draw */
+.form-badge-p {
+  background-color: #2563eb;
+}
+
+.stat-penalty-wins {
+  color: #2563eb;
+  font-weight: var(--font-weight-bold);
+}
+
 /* Upcoming Fixtures */
 .team-upcoming {
   padding-top: var(--space-sm);

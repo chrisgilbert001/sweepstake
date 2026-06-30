@@ -78,6 +78,7 @@ describe('pointsService', () => {
         points: 0,
         wins: 0,
         draws: 0,
+        penaltyWins: 0,
         losses: 0,
         goalsScored: 0,
         goalsConceded: 0,
@@ -97,6 +98,7 @@ describe('pointsService', () => {
         points: 0,
         wins: 0,
         draws: 0,
+        penaltyWins: 0,
         losses: 0,
         goalsScored: 0,
         goalsConceded: 0,
@@ -183,7 +185,7 @@ describe('pointsService', () => {
       const stats = await calculatePoints('p1', 'test-league');
 
       expect(stats).toEqual({
-        points: 0, wins: 0, draws: 0, losses: 0,
+        points: 0, wins: 0, draws: 0, penaltyWins: 0, losses: 0,
         goalsScored: 0, goalsConceded: 0, goalDifference: 0
       });
     });
@@ -243,9 +245,11 @@ describe('pointsService', () => {
 
       const stats = await calculatePoints('p1', 'test-league');
 
-      // Draw = 1pt + shootout winner = 1pt = 2 total
+      // Draw = 1pt + shootout winner = 1pt = 2 total. A shootout win is
+      // counted under penaltyWins, not draws.
       expect(stats.points).toBe(2);
-      expect(stats.draws).toBe(1);
+      expect(stats.penaltyWins).toBe(1);
+      expect(stats.draws).toBe(0);
       expect(stats.wins).toBe(0);
     });
 
@@ -338,9 +342,10 @@ describe('pointsService', () => {
 
       const stats = await calculatePoints('p1', 'test-league');
 
-      // Draw (1) + shootout winner bonus (1) = 2
+      // Draw (1) + shootout winner bonus (1) = 2; counted as a penalty win.
       expect(stats.points).toBe(2);
-      expect(stats.draws).toBe(1);
+      expect(stats.penaltyWins).toBe(1);
+      expect(stats.draws).toBe(0);
       expect(stats.goalsScored).toBe(2);
       expect(stats.goalsConceded).toBe(2);
     });
@@ -578,12 +583,16 @@ describe('pointsService', () => {
 
       const standings = await getLeagueStandings('test-league');
 
-      // Alice: draw (1) + shootout bonus (1) = 2
+      // Alice: shootout win = draw (1) + shootout bonus (1) = 2, counted as a penalty win
       expect(standings[0].participantName).toBe('Alice');
       expect(standings[0].points).toBe(2);
-      // Bob: draw (1) = 1
+      expect(standings[0].penaltyWins).toBe(1);
+      expect(standings[0].draws).toBe(0);
+      // Bob: lost the shootout = draw (1), no bonus
       expect(standings[1].participantName).toBe('Bob');
       expect(standings[1].points).toBe(1);
+      expect(standings[1].penaltyWins).toBe(0);
+      expect(standings[1].draws).toBe(1);
     });
 
     it('throws 404 for non-existent league', async () => {

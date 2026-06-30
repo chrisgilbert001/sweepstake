@@ -18,6 +18,7 @@ export async function calculatePoints(participantId, leagueSlug) {
       points: 0,
       wins: 0,
       draws: 0,
+      penaltyWins: 0,
       losses: 0,
       goalsScored: 0,
       goalsConceded: 0,
@@ -37,6 +38,7 @@ export async function calculatePoints(participantId, leagueSlug) {
   let points = 0;
   let wins = 0;
   let draws = 0;
+  let penaltyWins = 0;
   let losses = 0;
   let goalsScored = 0;
   let goalsConceded = 0;
@@ -51,9 +53,11 @@ export async function calculatePoints(participantId, leagueSlug) {
           wins++;
         } else if (result.homeScore === result.awayScore) {
           points += 1;
-          draws++;
           if (result.penaltyShootout?.winner === teamId) {
             points += 1;
+            penaltyWins++;
+          } else {
+            draws++;
           }
         } else {
           losses++;
@@ -66,9 +70,11 @@ export async function calculatePoints(participantId, leagueSlug) {
           wins++;
         } else if (result.homeScore === result.awayScore) {
           points += 1;
-          draws++;
           if (result.penaltyShootout?.winner === teamId) {
             points += 1;
+            penaltyWins++;
+          } else {
+            draws++;
           }
         } else {
           losses++;
@@ -81,6 +87,7 @@ export async function calculatePoints(participantId, leagueSlug) {
     points,
     wins,
     draws,
+    penaltyWins,
     losses,
     goalsScored,
     goalsConceded,

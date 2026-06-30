@@ -750,6 +750,129 @@ describe('syncService - result sync', () => {
     });
   });
 
+  it('records the level score for a PENALTY_SHOOTOUT match (fullTime folds in the kicks)', async () => {
+    // Real football-data.org behaviour: a 1-1 draw won 4-3 on penalties is
+    // reported with fullTime 5-4 and duration PENALTY_SHOOTOUT. The base score
+    // must be recovered as 1-1 so the result counts as a draw + shootout win.
+    readFile.mockResolvedValue({
+      fixtures: [
+        {
+          id: 'f001',
+          apiMatchId: 12345,
+          homeTeam: 'esp',
+          awayTeam: 'arg',
+          date: '2026-06-15T18:00:00Z',
+          stage: 'Round of 16',
+          status: 'scheduled',
+        },
+      ],
+      results: [],
+    });
+
+    fetchFromApi.mockResolvedValue({
+      matches: [
+        {
+          id: 12345,
+          utcDate: '2026-06-15T18:00:00Z',
+          status: 'FINISHED',
+          stage: 'ROUND_OF_16',
+          homeTeam: { id: 760, name: 'Spain' },
+          awayTeam: { id: 762, name: 'Argentina' },
+          score: {
+            winner: 'HOME_TEAM',
+            duration: 'PENALTY_SHOOTOUT',
+            fullTime: { home: 5, away: 4 },
+            halfTime: { home: 0, away: 0 },
+            regularTime: { home: 1, away: 1 },
+            extraTime: { home: 0, away: 0 },
+            penalties: { home: 4, away: 3 },
+          },
+        },
+      ],
+    });
+
+    mapTeamId.mockImplementation((id) => {
+      if (id === 760) return 'esp';
+      if (id === 762) return 'arg';
+      return null;
+    });
+
+    mapMatchStatus.mockReturnValue({ status: 'completed', known: true });
+
+    const result = await executeSyncCycle();
+
+    expect(result.stats.results).toBe(1);
+    const writtenResults = writeFile.mock.calls.find(c => c[0] === 'results.json')[1];
+    const stored = writtenResults.results[0];
+    // Base score is the level score at the end of extra time, not fullTime.
+    expect(stored.homeScore).toBe(1);
+    expect(stored.awayScore).toBe(1);
+    expect(stored.penaltyShootout).toEqual({
+      winner: 'esp',
+      homeGoals: 4,
+      awayGoals: 3,
+    });
+  });
+
+  it('recovers the level score from penalties when regularTime is absent', async () => {
+    // Defensive: if the API omits regularTime/extraTime, the base score is
+    // still recoverable as fullTime minus the shootout kicks.
+    readFile.mockResolvedValue({
+      fixtures: [
+        {
+          id: 'f001',
+          apiMatchId: 12345,
+          homeTeam: 'esp',
+          awayTeam: 'arg',
+          date: '2026-06-15T18:00:00Z',
+          stage: 'Round of 16',
+          status: 'scheduled',
+        },
+      ],
+      results: [],
+    });
+
+    fetchFromApi.mockResolvedValue({
+      matches: [
+        {
+          id: 12345,
+          utcDate: '2026-06-15T18:00:00Z',
+          status: 'FINISHED',
+          stage: 'ROUND_OF_16',
+          homeTeam: { id: 760, name: 'Spain' },
+          awayTeam: { id: 762, name: 'Argentina' },
+          score: {
+            winner: 'AWAY_TEAM',
+            duration: 'PENALTY_SHOOTOUT',
+            fullTime: { home: 3, away: 4 },
+            halfTime: { home: 1, away: 1 },
+            penalties: { home: 2, away: 3 },
+          },
+        },
+      ],
+    });
+
+    mapTeamId.mockImplementation((id) => {
+      if (id === 760) return 'esp';
+      if (id === 762) return 'arg';
+      return null;
+    });
+
+    mapMatchStatus.mockReturnValue({ status: 'completed', known: true });
+
+    await executeSyncCycle();
+
+    const writtenResults = writeFile.mock.calls.find(c => c[0] === 'results.json')[1];
+    const stored = writtenResults.results[0];
+    expect(stored.homeScore).toBe(1);
+    expect(stored.awayScore).toBe(1);
+    expect(stored.penaltyShootout).toEqual({
+      winner: 'arg',
+      homeGoals: 2,
+      awayGoals: 3,
+    });
+  });
+
   it('sets fixture status to completed only when result entry exists', async () => {
     readFile.mockResolvedValue({
       fixtures: [

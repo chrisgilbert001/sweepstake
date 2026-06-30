@@ -107,6 +107,11 @@ function TeamCard({ team }) {
           <span className="stat-label">Record</span>
           <span className="stat-value">
             {team.wins}W / {team.draws}D / {team.losses}L
+            {team.penaltyWins > 0 && (
+              <span className="stat-penalty-wins" title="Wins on a penalty shootout (2 pts each)">
+                {' '}/ {team.penaltyWins}PW
+              </span>
+            )}
           </span>
         </div>
         <div className="stat-row">
@@ -125,7 +130,13 @@ function TeamCard({ team }) {
               <span
                 key={idx}
                 className={`form-badge form-badge-${result.toLowerCase()}`}
-                aria-label={result === 'W' ? 'Win' : result === 'D' ? 'Draw' : 'Loss'}
+                aria-label={
+                  result === 'W' ? 'Win'
+                    : result === 'P' ? 'Won on penalties'
+                      : result === 'D' ? 'Draw'
+                        : 'Loss'
+                }
+                title={result === 'P' ? 'Won on penalties' : undefined}
               >
                 {result}
               </span>
